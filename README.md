@@ -121,7 +121,3 @@ sequenceDiagram
     end
 
 ```
-
-```mermaid
-
-```
