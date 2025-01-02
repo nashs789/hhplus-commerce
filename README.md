@@ -83,3 +83,9 @@ erDiagram
     Member ||--o{ CouponHistory : "uses"
 
 ```
+
+## ✨ Mock API
+
+<img width="1152" alt="스크린샷 2025-01-02 오후 11 24 46" src="https://github.com/user-attachments/assets/677017cd-3c69-4ef5-88e5-84d9e521baeb" />
+
+<img width="1152" alt="스크린샷 2025-01-02 오후 11 25 08" src="https://github.com/user-attachments/assets/e757b7f0-5462-490e-8567-efe68c47c9f3" />
