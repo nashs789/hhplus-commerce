@@ -132,6 +132,7 @@ erDiagram
     Product {
         Long id
         String name
+        Long price
     }
     Order {
         Long id
@@ -201,7 +202,7 @@ erDiagram
     Cart ||--|| Product : "contains"
     Member ||--|| UserPoint : "has one"
     UserPoint ||--o{ PointHistory : "has many"
-    Order ||--o{ Payment : "has one"
+    Order ||--o{ Payment : "has many"
     Product ||--|| Inventory : "has one"
     Coupon ||--o{ CouponHistory : "has many"
     Member ||--o{ CouponHistory : "uses"
