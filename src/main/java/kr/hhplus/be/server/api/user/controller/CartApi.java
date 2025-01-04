@@ -10,6 +10,7 @@ import kr.hhplus.be.server.api.user.response.CartResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public interface CartApi {
                     )
             }
     )
-    @GetMapping("/{userId}")
+    @PostMapping("/{userId}/add")
     public ResponseEntity<CartResponse> findCartById(@PathVariable("userId") Long userId);
 
     @Operation(
@@ -49,7 +50,7 @@ public interface CartApi {
                     )
             }
     )
-    @GetMapping("/{userId}")
+    @PostMapping("/{userId}/delete")
     public ResponseEntity<CartResponse> addCartById(@PathVariable("userId") Long userId, List<CartRequest> cartRequests);
 
     @Operation(
