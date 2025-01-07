@@ -1,8 +1,8 @@
-package kr.hhplus.be.server.api.user.controller;
+package kr.hhplus.be.server.api.member.controller;
 
 import kr.hhplus.be.server.api.product.response.ProductResponse;
-import kr.hhplus.be.server.api.user.request.CartRequest;
-import kr.hhplus.be.server.api.user.response.CartResponse;
+import kr.hhplus.be.server.api.member.request.CartRequest;
+import kr.hhplus.be.server.api.member.response.CartResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 

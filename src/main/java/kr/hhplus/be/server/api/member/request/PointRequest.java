@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.user.request;
+package kr.hhplus.be.server.api.member.request;
 
 public record PointRequest(Long userId, Long requestTime) {
 

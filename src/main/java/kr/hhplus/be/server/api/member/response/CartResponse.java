@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.user.response;
+package kr.hhplus.be.server.api.member.response;
 
 import kr.hhplus.be.server.api.product.response.ProductResponse;
 
