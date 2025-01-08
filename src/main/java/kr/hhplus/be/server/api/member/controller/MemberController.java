@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.api.member.controller;
 
+import jakarta.validation.Valid;
 import kr.hhplus.be.server.api.member.request.PointChargeRequest;
 import kr.hhplus.be.server.api.member.request.PointUseRequest;
 import kr.hhplus.be.server.api.member.response.MemberResponse;
@@ -30,9 +31,8 @@ public class MemberController implements MemberApi {
     @Override
     public ResponseEntity<PointHistoryResponse> chargePointById(
             @PathVariable final Long memberId,
-            @RequestBody final PointChargeRequest pointChargeRequest
+            @Valid @RequestBody final PointChargeRequest pointChargeRequest
             ) {
-
         return ResponseEntity.ok(memberService.chargeMemberPoint(PointChargeCommand.builder()
                                                                                    .memberId(memberId)
                                                                                    .chargePoint(pointChargeRequest.chargePoint())
@@ -44,7 +44,7 @@ public class MemberController implements MemberApi {
     @Override
     public ResponseEntity<PointHistoryResponse> userPointById(
             @PathVariable final Long memberId,
-            @RequestBody final PointUseRequest pointUseRequest
+            @Valid @RequestBody final PointUseRequest pointUseRequest
     ) {
         return ResponseEntity.ok(memberService.useMemberPoint(PointUseCommand.builder()
                                                                              .memberId(memberId)

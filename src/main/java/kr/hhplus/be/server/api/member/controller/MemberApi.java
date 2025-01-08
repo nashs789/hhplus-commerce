@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.api.member.request.PointChargeRequest;
-import kr.hhplus.be.server.api.member.request.PointRequest;
 import kr.hhplus.be.server.api.member.request.PointUseRequest;
 import kr.hhplus.be.server.api.member.response.MemberResponse;
 import kr.hhplus.be.server.api.member.response.PointHistoryResponse;
