@@ -13,9 +13,7 @@ public class OrderController implements OrderApi {
     public ResponseEntity<List<OrderResponse>> createOrder(OrderRequest orderRequest) {
         return ResponseEntity.ok(
                 List.of(
-                        new OrderResponse(1L, new ProductResponse(1L, "연필", 1_000L, 100L)),
-                        new OrderResponse(1L, new ProductResponse(2L, "필통", 3_000L, 50L)),
-                        new OrderResponse(1L, new ProductResponse(3L, "볼펜", 1_500L, 1000L))
+
                 )
         );
     }

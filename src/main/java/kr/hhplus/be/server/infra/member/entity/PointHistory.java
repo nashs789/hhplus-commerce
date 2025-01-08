@@ -41,7 +41,7 @@ public class PointHistory extends Timestamp {
     public PointHistoryInfo toInfo() {
         return PointHistoryInfo.builder()
                                .id(id)
-                               .member(member)
+                               .memberInfo(member.toInfo())
                                .pointUseType(pointUseType)
                                .beforeAmount(beforeAmount)
                                .afterAmount(afterAmount)

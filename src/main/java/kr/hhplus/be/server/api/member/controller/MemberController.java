@@ -22,14 +22,15 @@ public class MemberController implements MemberApi {
     private final MemberService memberService;
 
     @Override
-    public ResponseEntity<MemberResponse> findMemberById(@PathVariable("userId") final Long memberId) {
+    public ResponseEntity<MemberResponse> findMemberById(@PathVariable final Long memberId) {
         return ResponseEntity.ok(memberService.findMemberPointById(memberId)
                                               .toResponse());
     }
 
     @Override
     public ResponseEntity<PointHistoryResponse> chargePointById(
-            @PathVariable("memberId") final Long memberId, final @RequestBody PointChargeRequest pointChargeRequest
+            @PathVariable final Long memberId,
+            @RequestBody final PointChargeRequest pointChargeRequest
             ) {
 
         return ResponseEntity.ok(memberService.chargeMemberPoint(PointChargeCommand.builder()
@@ -42,7 +43,8 @@ public class MemberController implements MemberApi {
 
     @Override
     public ResponseEntity<PointHistoryResponse> userPointById(
-            @PathVariable("memberId") final Long memberId, final @RequestBody PointUseRequest pointUseRequest
+            @PathVariable final Long memberId,
+            @RequestBody final PointUseRequest pointUseRequest
     ) {
         return ResponseEntity.ok(memberService.useMemberPoint(PointUseCommand.builder()
                                                                              .memberId(memberId)

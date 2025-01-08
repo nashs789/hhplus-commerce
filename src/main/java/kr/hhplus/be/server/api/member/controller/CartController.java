@@ -16,9 +16,7 @@ public class CartController implements CartApi {
         return ResponseEntity.ok(
                 new CartResponse(
                         List.of(
-                                new ProductResponse(10L, "지갑", 10_000L, 45L),
-                                new ProductResponse(11L, "키링", 1200L, 1009L),
-                                new ProductResponse(12L, "인형", 12_000L, 40L)
+
                         )
                 )
         );
@@ -29,9 +27,7 @@ public class CartController implements CartApi {
         return ResponseEntity.ok(
                 new CartResponse(
                         List.of(
-                                new ProductResponse(10L, "지갑", 10_000L, 45L),
-                                new ProductResponse(11L, "키링", 1200L, 1009L),
-                                new ProductResponse(12L, "인형", 12_000L, 40L)
+
                         )
                 )
         );
@@ -42,9 +38,7 @@ public class CartController implements CartApi {
         return ResponseEntity.ok(
                 new CartResponse(
                         List.of(
-                                new ProductResponse(10L, "지갑", 10_000L, 45L),
-                                new ProductResponse(11L, "키링", 1200L, 1009L),
-                                new ProductResponse(12L, "인형", 12_000L, 40L)
+
                         )
                 )
         );
