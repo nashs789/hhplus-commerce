@@ -1,14 +1,21 @@
 package kr.hhplus.be.server.domain.member.service;
 
+import kr.hhplus.be.server.domain.member.command.CartAddCommand;
+import kr.hhplus.be.server.domain.member.command.CartDeleteCommand;
 import kr.hhplus.be.server.domain.member.command.PointChargeCommand;
 import kr.hhplus.be.server.domain.member.command.PointUseCommand;
 import kr.hhplus.be.server.domain.member.exception.PointException;
+import kr.hhplus.be.server.domain.member.info.CartInfo;
+import kr.hhplus.be.server.domain.member.info.CartProductInfo;
 import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import kr.hhplus.be.server.domain.member.info.PointHistoryInfo;
 import kr.hhplus.be.server.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static kr.hhplus.be.server.domain.member.exception.PointException.PointExceptionCode.FAIL_CHARGE;
 import static kr.hhplus.be.server.domain.member.exception.PointException.PointExceptionCode.FAIL_USE;
@@ -48,5 +55,36 @@ public class MemberService {
         }
 
         throw new PointException(FAIL_USE);
+    }
+
+    @Transactional(readOnly = true)
+    public CartInfo findCartByMemberId(final Long memberId) {
+        return memberRepository.findCartByMemberId(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CartProductInfo> findCartItemsByMemberId(final Long memberId) {
+        return memberRepository.findCartItemsById(memberId);
+    }
+
+    @Transactional
+    public List<CartProductInfo> addCartByProductId(final Long memberId, final List<CartAddCommand> cartAddCommand) {
+        List<CartProductInfo> result = new ArrayList<>();
+        CartInfo cartInfo = memberRepository.findCartByMemberId(memberId);
+
+        for(CartAddCommand addCommand : cartAddCommand) {
+            result.add(
+                    memberRepository.addCartByProductId(cartInfo, addCommand.getProductId(), addCommand.getCnt())
+            );
+        }
+
+        return result;
+    }
+
+    @Transactional
+    public void deleteCartByProductId(final Long memberId, final List<CartDeleteCommand> cartDeleteCommand) {
+        for(CartDeleteCommand deleteCommand : cartDeleteCommand) {
+            memberRepository.deleteCartByProductId(deleteCommand.getCartProductId());
+        }
     }
 }

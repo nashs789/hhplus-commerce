@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.infra.coupon.entity;
+package kr.hhplus.be.server.infra.coupon.entity.key;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

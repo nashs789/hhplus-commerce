@@ -5,19 +5,18 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.hhplus.be.server.api.member.request.CartAddRequest;
+import kr.hhplus.be.server.api.member.request.CartDeleteRequest;
 import kr.hhplus.be.server.api.member.request.PointChargeRequest;
 import kr.hhplus.be.server.api.member.request.PointUseRequest;
-import kr.hhplus.be.server.api.member.response.MemberResponse;
-import kr.hhplus.be.server.api.member.response.PointHistoryResponse;
-import kr.hhplus.be.server.api.member.response.PointResponse;
+import kr.hhplus.be.server.api.member.response.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "포인트 API", description = "유저 포인트 관련")
-@RequestMapping("/api/v1/member/point")
+@RequestMapping("/api/v1/member")
 public interface MemberApi {
 
     @Operation(
@@ -34,8 +33,8 @@ public interface MemberApi {
                     )
             }
     )
-    @GetMapping("/{memberId}")
-    public ResponseEntity<MemberResponse> findMemberById(@PathVariable("memberId") Long memberId);
+    @GetMapping("/point/{memberId}")
+    ResponseEntity<MemberResponse> findMemberById(@PathVariable("memberId") Long memberId);
 
     @Operation(
             summary = "포인트 충전",
@@ -51,8 +50,8 @@ public interface MemberApi {
                    )
             }
     )
-    @PostMapping("/{memberId}/charge")
-    public ResponseEntity<PointHistoryResponse> chargePointById(@PathVariable("memberId") Long memberId, PointChargeRequest pointChargeRequest);
+    @PostMapping("/point/{memberId}/charge")
+    ResponseEntity<PointHistoryResponse> chargePointById(@PathVariable("memberId") Long memberId, PointChargeRequest pointChargeRequest);
 
     @Operation(
             summary = "포인트 사용",
@@ -68,6 +67,57 @@ public interface MemberApi {
                     )
             }
     )
-    @PostMapping("/{memberId}/use")
-    public ResponseEntity<PointHistoryResponse> userPointById(@PathVariable("memberId") Long memberId, PointUseRequest pointUseRequest);
+    @PostMapping("/point/{memberId}/use")
+    ResponseEntity<PointHistoryResponse> userPointById(@PathVariable("memberId") Long memberId, PointUseRequest pointUseRequest);
+
+    @Operation(
+            summary = "장바구니 조회",
+            description = "유저 장바구니 품목 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "장바구니 조회 성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CartResponse.class)
+                            )
+                    )
+            }
+    )
+    @GetMapping("/{memberId}/cart")
+    ResponseEntity<List<CartProductResponse>> findCartItemsByMemberId(@PathVariable("memberId") Long memberId);
+
+    @Operation(
+            summary = "장바구니 품목 추가",
+            description = "유저 장바구니 품목 추가",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "장바구니 품목 추가 성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CartResponse.class)
+                            )
+                    )
+            }
+    )
+    @PostMapping("/{memberId}/cart/add")
+    ResponseEntity<List<CartProductResponse>> addCartByProductId(@PathVariable("memberId") Long memberId, @RequestBody List<CartAddRequest> cartAddRequests);
+
+    @Operation(
+            summary = "장바구니 품목 삭제",
+            description = "유저 장바구니 품목 삭제",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "장바구니 품목 삭제 성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CartResponse.class)
+                            )
+                    )
+            }
+    )
+    @PostMapping("/{memberId}/cart/delete")
+    ResponseEntity<?> deleteCartById(@PathVariable("memberId") Long memberId, @RequestBody List<CartDeleteRequest> cartDeleteRequests);
 }
