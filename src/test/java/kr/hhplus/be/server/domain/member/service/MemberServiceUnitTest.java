@@ -40,10 +40,10 @@ class MemberServiceUnitTest {
                                                .id(MEMBER_ID)
                                                .point(POINT)
                                                .build();
-        when(memberRepository.findMemberPointById(MEMBER_ID)).thenReturn(returnObj);
+        when(memberRepository.findMemberById(MEMBER_ID)).thenReturn(returnObj);
 
         // when
-        MemberInfo memberById = memberService.findMemberPointById(MEMBER_ID);
+        MemberInfo memberById = memberService.findMemberById(MEMBER_ID);
 
         // then
         assertEquals(returnObj, memberById);
@@ -55,11 +55,11 @@ class MemberServiceUnitTest {
     void findNotExistMember() {
         // given
         final Long MEMBER_ID = 1L;
-        when(memberRepository.findMemberPointById(MEMBER_ID)).thenThrow(new MemberException(NO_SUCH_MEMBER));
+        when(memberRepository.findMemberById(MEMBER_ID)).thenThrow(new MemberException(NO_SUCH_MEMBER));
 
         // when
         MemberException memberException = assertThrows(MemberException.class, () -> {
-            memberRepository.findMemberPointById(MEMBER_ID);
+            memberRepository.findMemberById(MEMBER_ID);
         });
 
         // then
