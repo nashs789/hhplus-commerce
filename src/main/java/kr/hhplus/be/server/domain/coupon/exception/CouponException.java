@@ -10,6 +10,7 @@ public class CouponException extends CommerceException {
     @Getter
     @RequiredArgsConstructor
     public enum CouponExceptionCode {
+        NOT_EXIST_COUPON(HttpStatus.NO_CONTENT, "존재하지 않는 쿠폰 입니다."),
         NOT_EXIST_COUPON_HISTORY(HttpStatus.NO_CONTENT, "쿠폰 발급 정보가 없습니다."),
         NOT_VALID_COUPON(HttpStatus.BAD_REQUEST, "유효하지 않은 쿠폰 입니다.")
         ;

@@ -4,7 +4,6 @@ import kr.hhplus.be.server.domain.coupon.exception.CouponException;
 import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
 import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
-import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import kr.hhplus.be.server.infra.coupon.entity.Coupon;
 import kr.hhplus.be.server.infra.coupon.entity.CouponHistory;
 import kr.hhplus.be.server.infra.coupon.entity.CouponHistoryId;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static kr.hhplus.be.server.domain.coupon.exception.CouponException.CouponExceptionCode.NOT_EXIST_COUPON;
 import static kr.hhplus.be.server.domain.coupon.exception.CouponException.CouponExceptionCode.NOT_EXIST_COUPON_HISTORY;
 import static kr.hhplus.be.server.infra.coupon.entity.CouponHistory.CouponStatus.NOT_USED;
 
@@ -31,14 +31,14 @@ public class CouponRepositoryImpl implements CouponRepository {
     @Override
     public CouponInfo findCouponById(final Long couponId) {
         return couponJpaRepository.findById(couponId)
-                                  .orElseThrow()
+                                  .orElseThrow(() -> new CouponException(NOT_EXIST_COUPON))
                                   .toInfo();
     }
 
     @Override
     public CouponInfo findCouponByIdWithLock(final Long couponId) {
         return couponJpaRepository.findCouponByIdWithLock(couponId)
-                                  .orElseThrow()
+                                  .orElseThrow(() -> new CouponException(NOT_EXIST_COUPON))
                                   .toInfo();
     }
 
