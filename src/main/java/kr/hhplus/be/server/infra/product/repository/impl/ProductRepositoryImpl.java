@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static kr.hhplus.be.server.domain.product.exception.ProductException.ProductExceptionCode.NO_SUCH_PRODUCT;
 
 @Repository
@@ -22,6 +24,15 @@ public class ProductRepositoryImpl implements ProductRepository {
     private final ProductJpaRepository productJpaRepository;
     /** 상품 상세 정보 */
     private final ProductInventoryJpaRepository productInventoryJpaRepository;
+
+    @Override
+    public List<ProductInfo> findProductsByIds(final List<Long> productIds) {
+        return productJpaRepository.findAllByIdIn(productIds)
+                                   .orElseThrow(() -> new ProductException(NO_SUCH_PRODUCT))
+                                   .stream()
+                                   .map(Product::toInfo)
+                                   .toList();
+    }
 
     @Override
     public Page<ProductInfo> findAllProducts(final Pageable pageable) {

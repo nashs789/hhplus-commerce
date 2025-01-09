@@ -6,7 +6,7 @@ import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.infra.coupon.entity.Coupon;
 import kr.hhplus.be.server.infra.coupon.entity.CouponHistory;
-import kr.hhplus.be.server.infra.coupon.entity.CouponHistoryId;
+import kr.hhplus.be.server.infra.coupon.entity.key.CouponHistoryId;
 import kr.hhplus.be.server.infra.coupon.repository.CouponHistoryJpaRepository;
 import kr.hhplus.be.server.infra.coupon.repository.CouponJpaRepository;
 import kr.hhplus.be.server.infra.member.entity.Member;

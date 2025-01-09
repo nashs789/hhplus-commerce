@@ -3,6 +3,7 @@ package kr.hhplus.be.server.infra.coupon.entity;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
+import kr.hhplus.be.server.infra.coupon.entity.key.CouponHistoryId;
 import kr.hhplus.be.server.infra.member.entity.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
