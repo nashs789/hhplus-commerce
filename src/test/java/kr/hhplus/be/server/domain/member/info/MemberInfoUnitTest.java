@@ -27,8 +27,8 @@ class MemberInfoUnitTest {
         info.chargePoint(CHARGE_POINT);
 
         // then
-        assertEquals(info.getPoint(), BASE_POINT);
-        assertEquals(info.getAfterPoint(), BASE_POINT + CHARGE_POINT);
+        assertEquals(BASE_POINT, info.getPoint());
+        assertEquals(BASE_POINT + CHARGE_POINT, info.getAfterPoint());
     }
 
     @Test
@@ -45,8 +45,8 @@ class MemberInfoUnitTest {
         info.usePoint(USE_POINT);
 
         // then
-        assertEquals(info.getPoint(), BASE_POINT);
-        assertEquals(info.getAfterPoint(), BASE_POINT - USE_POINT);
+        assertEquals(BASE_POINT, info.getPoint());
+        assertEquals(BASE_POINT - USE_POINT, info.getAfterPoint());
     }
 
     @Test

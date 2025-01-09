@@ -2,7 +2,6 @@ package kr.hhplus.be.server.domain.coupon.repository;
 
 import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
 import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
-import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -96,8 +96,8 @@ class MemberServiceUnitTest {
         PointHistoryInfo pointHistoryInfo = memberService.chargeMemberPoint(command);
 
         // then
-        assertEquals(pointHistoryInfo.getBeforeAmount(), BASE_POINT);
-        assertEquals(pointHistoryInfo.getAfterAmount(), AFTER_POINT);
+        assertEquals(BASE_POINT, pointHistoryInfo.getBeforeAmount());
+        assertEquals(AFTER_POINT, pointHistoryInfo.getAfterAmount());
     }
 
     @Test
@@ -149,8 +149,8 @@ class MemberServiceUnitTest {
         PointHistoryInfo pointHistoryInfo = memberService.useMemberPoint(command);
 
         // then
-        assertEquals(pointHistoryInfo.getBeforeAmount(), BASE_POINT);
-        assertEquals(pointHistoryInfo.getAfterAmount(), AFTER_POINT);
+        assertEquals(BASE_POINT, pointHistoryInfo.getBeforeAmount());
+        assertEquals(AFTER_POINT, pointHistoryInfo.getAfterAmount());
     }
 
     @Test
