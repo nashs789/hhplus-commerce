@@ -23,7 +23,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     private final PointHistoryJpaRepository pointHistoryJpaRepository;
 
     @Override
-    public MemberInfo findMemberPointById(final Long memberId) {
+    public MemberInfo findMemberById(final Long memberId) {
         return memberJpaRepository.findById(memberId)
                                   .orElseThrow(() -> new MemberException(NO_SUCH_MEMBER))
                                   .toInfo();

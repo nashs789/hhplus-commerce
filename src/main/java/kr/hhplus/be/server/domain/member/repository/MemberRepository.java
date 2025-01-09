@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository {
 
-    MemberInfo findMemberPointById(Long memberId);
+    MemberInfo findMemberById(Long memberId);
     MemberInfo findByMemberIdWithLock(Long memberId);
     boolean chargeMemberPoint(MemberInfo memberInfo);
     boolean useMemberPoint(MemberInfo memberInfo);

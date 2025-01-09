@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Timestamp {
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;

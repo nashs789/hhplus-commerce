@@ -24,7 +24,7 @@ public class MemberController implements MemberApi {
 
     @Override
     public ResponseEntity<MemberResponse> findMemberById(@PathVariable final Long memberId) {
-        return ResponseEntity.ok(memberService.findMemberPointById(memberId)
+        return ResponseEntity.ok(memberService.findMemberById(memberId)
                                               .toResponse());
     }
 

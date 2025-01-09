@@ -20,8 +20,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public MemberInfo findMemberPointById(final Long memberId) {
-        return memberRepository.findMemberPointById(memberId);
+    public MemberInfo findMemberById(final Long memberId) {
+        return memberRepository.findMemberById(memberId);
     }
 
     @Transactional
