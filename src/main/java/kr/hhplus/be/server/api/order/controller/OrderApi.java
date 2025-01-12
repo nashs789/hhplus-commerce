@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.hhplus.be.server.api.order.request.OrderRequest;
 import kr.hhplus.be.server.api.order.response.OrderResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -31,6 +32,6 @@ public interface OrderApi {
                     )
             }
     )
-    @PostMapping
-    public ResponseEntity<List<OrderResponse>> createOrder(OrderRequest orderRequest);
+    @PostMapping("/{memberId}")
+    ResponseEntity<List<OrderResponse>> createOrder(@PathVariable Long memberId);
 }

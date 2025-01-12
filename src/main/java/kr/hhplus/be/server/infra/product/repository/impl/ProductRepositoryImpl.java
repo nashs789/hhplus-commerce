@@ -20,9 +20,7 @@ import static kr.hhplus.be.server.domain.product.exception.ProductException.Prod
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
 
-    /** 상품 정보 */
     private final ProductJpaRepository productJpaRepository;
-    /** 상품 상세 정보 */
     private final ProductInventoryJpaRepository productInventoryJpaRepository;
 
     @Override

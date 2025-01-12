@@ -2,6 +2,7 @@ package kr.hhplus.be.server.infra.order.entity;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
+import kr.hhplus.be.server.infra.product.entity.Product;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,4 +25,10 @@ public class OrderDetail extends Timestamp {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @Column
+    private Long cnt;
 }
