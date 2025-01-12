@@ -100,8 +100,8 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public List<CartProductInfo> findCartItemsById(final Long memberId) {
-        return cartProductJpaRepository.findCartItemsByMemberId(memberId)
+    public List<CartProductInfo> findCartProductsById(final Long memberId) {
+        return cartProductJpaRepository.findCartProductsByMemberId(memberId)
                                        .orElseThrow(() -> new CartException(NO_SUCH_CART))
                                        .stream()
                                        .map(CartProduct::toInfo)
@@ -109,7 +109,16 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public CartProductInfo addCartByProductId(final CartInfo cartInfo, final Long productId, final Long cnt) {
+    public List<CartProductInfo> findCartProductsByMemberIdWithLock(final Long memberId) {
+        return cartProductJpaRepository.findCartProductsByMemberIdWithLock(memberId)
+                                       .orElseThrow(() -> new CartException(NO_SUCH_CART))
+                                       .stream()
+                                       .map(CartProduct::toInfo)
+                                       .toList();
+    }
+
+    @Override
+    public CartProductInfo addCartByProductId(final CartInfo cartInfo, final Long productId, final Long quantity) {
         Cart cart = Cart.builder()
                         .id(cartInfo.getId())
                         .member(Member.builder()
@@ -122,7 +131,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         CartProduct cartProduct = CartProduct.builder()
                                              .cart(cart)
                                              .product(product)
-                                             .cnt(cnt)
+                                             .quantity(quantity)
                                              .build();
 
         return cartProductJpaRepository.save(cartProduct)

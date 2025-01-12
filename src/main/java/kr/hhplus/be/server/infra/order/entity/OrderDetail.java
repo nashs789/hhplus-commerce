@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.infra.order.entity;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.domain.order.info.OrderDetailInfo;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
 import kr.hhplus.be.server.infra.product.entity.Product;
 import lombok.AccessLevel;
@@ -21,7 +22,7 @@ public class OrderDetail extends Timestamp {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
@@ -30,5 +31,16 @@ public class OrderDetail extends Timestamp {
     private Product product;
 
     @Column
-    private Long cnt;
+    private Long quantity;
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public OrderDetailInfo toInfo() {
+        return OrderDetailInfo.builder()
+                              .id(id)
+                              .productInfo(product.toInfo())
+                              .build();
+    }
 }

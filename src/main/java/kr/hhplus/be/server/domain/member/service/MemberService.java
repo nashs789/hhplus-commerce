@@ -63,8 +63,12 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartProductInfo> findCartItemsByMemberId(final Long memberId) {
-        return memberRepository.findCartItemsById(memberId);
+    public List<CartProductInfo> findCartProductsByMemberId(final Long memberId) {
+        return memberRepository.findCartProductsById(memberId);
+    }
+    @Transactional
+    public List<CartProductInfo> findCartProductsByMemberIdWithLock(final Long memberId) {
+        return memberRepository.findCartProductsByMemberIdWithLock(memberId);
     }
 
     @Transactional

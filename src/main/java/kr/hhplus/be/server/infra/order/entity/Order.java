@@ -1,9 +1,14 @@
 package kr.hhplus.be.server.infra.order.entity;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.domain.order.info.OrderInfo;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
+import kr.hhplus.be.server.infra.member.entity.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +30,7 @@ public class Order extends Timestamp {
     @Getter
     @RequiredArgsConstructor
     public enum OrderShipStatus {
+        NOT_DEPARTURE,
         SHIPPING,
         SHIPPED
     }
@@ -32,9 +38,6 @@ public class Order extends Timestamp {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column
-    private Long quantity;
 
     @Column
     private Long finalPrice;
@@ -47,4 +50,30 @@ public class Order extends Timestamp {
 
     @Enumerated(EnumType.STRING)
     private OrderShipStatus orderShipStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetail> orderDetails = new ArrayList<>();
+
+    public void addOrderDetail(OrderDetail orderDetail) {
+        this.orderDetails.add(orderDetail);
+        orderDetail.setOrder(this); // 연관 관계 편의 메서드
+    }
+
+    public OrderInfo toInfo() {
+        return OrderInfo.builder()
+                        .id(id)
+                        .finalPrice(finalPrice)
+                        .originalPrice(finalPrice)
+                        .orderStatus(orderStatus)
+                        .orderShipStatus(orderShipStatus)
+                        .orderStatus(orderStatus)
+                        .orderDetails(orderDetails.stream()
+                                                  .map(OrderDetail::toInfo)
+                                                  .toList())
+                        .build();
+    }
 }

@@ -205,10 +205,10 @@ class MemberServiceUnitTest {
                                                        .build())
                                .build()
         );
-        when(memberRepository.findCartItemsById(anyLong())).thenReturn(productInfos);
+        when(memberRepository.findCartProductsById(anyLong())).thenReturn(productInfos);
 
         // when
-        List<CartProductInfo> result = memberService.findCartItemsByMemberId(1L);
+        List<CartProductInfo> result = memberService.findCartProductsByMemberId(1L);
 
         // then
         assertEquals(2, result.size());
@@ -223,10 +223,10 @@ class MemberServiceUnitTest {
     @DisplayName("장바구니 조회 실패")
     void failToFindCartByMemberId() {
         // given
-        when(memberRepository.findCartItemsById(anyLong())).thenThrow(new CartException(NO_SUCH_CART));
+        when(memberRepository.findCartProductsById(anyLong())).thenThrow(new CartException(NO_SUCH_CART));
 
         // when
-        CartException cartException = assertThrows(CartException.class, () -> memberService.findCartItemsByMemberId(1L));
+        CartException cartException = assertThrows(CartException.class, () -> memberService.findCartProductsByMemberId(1L));
 
         // then
         assertEquals(HttpStatus.BAD_REQUEST, cartException.getStatus());

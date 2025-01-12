@@ -27,7 +27,7 @@ public class CartProduct extends Timestamp {
     private Product product;
 
     @Column
-    private Long cnt;
+    private Long quantity;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
@@ -37,7 +37,7 @@ public class CartProduct extends Timestamp {
         return CartProductInfo.builder()
                               .id(id)
                               .productInfo(product.toInfo())
-                              .cnt(cnt)
+                              .quantity(quantity)
                               .cartInfo(cart.toInfo())
                               .build();
     }

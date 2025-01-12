@@ -10,14 +10,14 @@ import lombok.Data;
 public class CartProductInfo {
     private Long id;
     private ProductInfo productInfo;
-    private Long cnt;
+    private Long quantity;
     private CartInfo cartInfo;
 
     public CartProductResponse toResponse() {
         return new CartProductResponse(
                 id,
                 productInfo.toResponse(),
-                cnt,
+                quantity,
                 cartInfo.toResponse()
         );
     }
