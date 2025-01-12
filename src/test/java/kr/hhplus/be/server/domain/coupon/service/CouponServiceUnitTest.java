@@ -64,7 +64,7 @@ class CouponServiceUnitTest {
         );
 
         // then
-        assertEquals(HttpStatus.NO_CONTENT, couponException.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST, couponException.getStatus());
         assertEquals("존재하지 않는 쿠폰 입니다.", couponException.getMessage());
     }
 
@@ -99,7 +99,7 @@ class CouponServiceUnitTest {
         );
 
         // then
-        assertEquals(HttpStatus.NO_CONTENT, couponException.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST, couponException.getStatus());
         assertEquals("쿠폰 발급 정보가 없습니다.", couponException.getMessage());
     }
 
