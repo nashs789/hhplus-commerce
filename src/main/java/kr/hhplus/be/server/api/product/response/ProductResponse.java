@@ -4,6 +4,6 @@ public record ProductResponse(
         Long id,
         String name,
         Long price,
-        Long quantity
+        String image
 ) {
 }

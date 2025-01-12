@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.hhplus.be.server.api.coupon.response.CouponHistoryResponse;
 import kr.hhplus.be.server.api.coupon.response.CouponResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,24 @@ import java.util.List;
 public interface CouponApi {
 
     @Operation(
-            summary = "쿠폰 조회",
+            summary = "쿠폰 정보 조회",
+            description = "쿠폰에 대한 정보를 조회 합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "쿠폰 상세 정보 조회 성공",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CouponResponse.class)
+                            )
+                    )
+            }
+    )
+    @GetMapping("/{couponId}")
+    ResponseEntity<CouponResponse> findCouponById(@PathVariable("memberId") Long memberId);
+
+    @Operation(
+            summary = "보유 쿠폰 조회",
             description = "보유한 쿠폰을 조회 합니다.",
             responses = {
                     @ApiResponse(
@@ -32,8 +50,8 @@ public interface CouponApi {
                     )
             }
     )
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<CouponResponse>> findCouponById(@PathVariable("userId") Long userId);
+    @GetMapping("/member/{memberId}/list")
+    ResponseEntity<List<CouponHistoryResponse>> findCouponHistoryById(@PathVariable("memberId") Long memberId);
 
     @Operation(
             summary = "쿠폰 발급 신청",
@@ -49,6 +67,9 @@ public interface CouponApi {
                     )
             }
     )
-    @PostMapping("/{userId}")
-    public ResponseEntity<CouponResponse> applyCouponById(@PathVariable("userId") Long userId);
+    @PostMapping("/{couponId}/member/{memberId}")
+    ResponseEntity<CouponHistoryResponse> applyCouponById(
+            @PathVariable("couponId") Long couponId,
+            @PathVariable("memberId") Long memberId
+    );
 }
