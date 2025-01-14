@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.infra.payment.entity;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.domain.payment.info.PaymentInfo;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
 import kr.hhplus.be.server.infra.order.entity.Order;
 import lombok.*;
@@ -44,4 +45,14 @@ public class Payment extends Timestamp {
 
     @Column
     private Long amount;
+
+    public PaymentInfo toInfo() {
+        return PaymentInfo.builder()
+                          .id(id)
+                          .orderInfo(order.toInfo())
+                          .paymentStatus(paymentStatus)
+                          .paymentMethod(paymentMethod)
+                          .amount(amount)
+                          .build();
+    }
 }

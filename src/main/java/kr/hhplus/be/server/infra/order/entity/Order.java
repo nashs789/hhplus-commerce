@@ -60,7 +60,7 @@ public class Order extends Timestamp {
 
     public void addOrderDetail(OrderDetail orderDetail) {
         this.orderDetails.add(orderDetail);
-        orderDetail.setOrder(this); // 연관 관계 편의 메서드
+        orderDetail.setOrder(this);
     }
 
     public OrderInfo toInfo() {

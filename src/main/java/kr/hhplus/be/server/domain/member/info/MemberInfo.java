@@ -30,6 +30,12 @@ public class MemberInfo {
         }
     }
 
+    public void isAffordable(final Long orderPrice) {
+        if(point < orderPrice) {
+            throw new PointException(INSUFFICIENT_BALANCE);
+        }
+    }
+
     public MemberResponse toResponse() {
         return new MemberResponse(id, point, createAt, updateAt);
     }

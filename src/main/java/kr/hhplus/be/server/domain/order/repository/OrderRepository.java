@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface OrderRepository {
 
+    OrderInfo findOrderById(Long orderId);
     OrderInfo createOrder(Long memberId, Long finalPrice, List<CartProductInfo> productsInCart);
 }

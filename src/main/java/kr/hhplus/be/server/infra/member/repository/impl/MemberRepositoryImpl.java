@@ -23,7 +23,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static kr.hhplus.be.server.domain.member.exception.CartException.CartExceptionCode.FAIL_ADD_CART;
 import static kr.hhplus.be.server.domain.member.exception.CartException.CartExceptionCode.NO_SUCH_CART;
 import static kr.hhplus.be.server.domain.member.exception.MemberException.MemberExceptionCode.NO_SUCH_MEMBER;
 

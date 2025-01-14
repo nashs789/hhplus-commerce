@@ -15,6 +15,11 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
+    @Transactional(readOnly = true)
+    public OrderInfo findOrderById(final Long orderId) {
+        return orderRepository.findOrderById(orderId);
+    }
+
     @Transactional
     public OrderInfo createOrder(
             final List<CartProductInfo> productsInCart,

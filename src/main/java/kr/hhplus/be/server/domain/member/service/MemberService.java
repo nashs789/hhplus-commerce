@@ -32,6 +32,11 @@ public class MemberService {
     }
 
     @Transactional
+    public MemberInfo findByMemberIdWithLock(final Long memberId) {
+        return memberRepository.findByMemberIdWithLock(memberId);
+    }
+
+    @Transactional
     public PointHistoryInfo chargeMemberPoint(final PointChargeCommand pointChargeCommand) {
         MemberInfo memberInfo = memberRepository.findByMemberIdWithLock(pointChargeCommand.getMemberId());
 

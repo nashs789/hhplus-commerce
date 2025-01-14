@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.infra.order.repository.impl;
 
 import kr.hhplus.be.server.domain.member.info.CartProductInfo;
+import kr.hhplus.be.server.domain.order.exception.OrderException;
 import kr.hhplus.be.server.domain.order.info.OrderInfo;
 import kr.hhplus.be.server.domain.order.repository.OrderRepository;
 import kr.hhplus.be.server.infra.member.entity.Member;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static kr.hhplus.be.server.domain.order.exception.OrderException.OrderExceptionCode.NO_SUCH_ORDER;
 import static kr.hhplus.be.server.infra.order.entity.Order.OrderShipStatus.NOT_DEPARTURE;
 import static kr.hhplus.be.server.infra.order.entity.Order.OrderStatus.NOT_PAYED;
 
@@ -23,6 +25,13 @@ import static kr.hhplus.be.server.infra.order.entity.Order.OrderStatus.NOT_PAYED
 public class OrderRepositoryImpl implements OrderRepository {
 
     private final OrderJpaRepository orderJpaRepository;
+
+    @Override
+    public OrderInfo findOrderById(final Long orderId) {
+        return orderJpaRepository.findById(orderId)
+                                 .orElseThrow(() -> new OrderException(NO_SUCH_ORDER))
+                                 .toInfo();
+    }
 
     @Override
     public OrderInfo createOrder(final Long memberId, final Long finalPrice, final List<CartProductInfo> productsInCart) {
