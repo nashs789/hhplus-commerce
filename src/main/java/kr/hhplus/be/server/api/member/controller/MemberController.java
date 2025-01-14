@@ -15,7 +15,6 @@ import kr.hhplus.be.server.domain.member.command.PointUseCommand;
 import kr.hhplus.be.server.domain.member.info.CartProductInfo;
 import kr.hhplus.be.server.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,7 +67,7 @@ public class MemberController implements MemberApi {
     public ResponseEntity<List<CartProductResponse>> findCartItemsByMemberId(
             @PathVariable final Long memberId
     ) {
-        return ResponseEntity.ok(memberService.findCartItemsByMemberId(memberId)
+        return ResponseEntity.ok(memberService.findCartProductsByMemberId(memberId)
                                               .stream()
                                               .map(CartProductInfo::toResponse)
                                               .toList());
@@ -109,7 +108,6 @@ public class MemberController implements MemberApi {
 
         memberService.deleteCartByProductId(memberId, commands);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                             .body(null);
+        return ResponseEntity.ok(null);
     }
 }

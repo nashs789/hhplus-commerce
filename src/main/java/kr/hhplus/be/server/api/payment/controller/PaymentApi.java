@@ -5,9 +5,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.hhplus.be.server.api.payment.request.PaymentRequest;
 import kr.hhplus.be.server.api.payment.response.PaymentResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -29,6 +29,9 @@ public interface PaymentApi {
                     )
             }
     )
-    @PostMapping
-    public ResponseEntity<PaymentResponse> paymentProgress(PaymentRequest paymentRequest);
+    @PostMapping("/member/{memberId}/order/{orderId}")
+    ResponseEntity<PaymentResponse> paymentProgress(
+            @PathVariable("memberId") Long memberId,
+            @PathVariable("orderId") Long orderId
+    );
 }

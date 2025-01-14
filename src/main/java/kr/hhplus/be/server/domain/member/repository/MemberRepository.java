@@ -20,7 +20,8 @@ public interface MemberRepository {
     PointHistoryInfo savePointChargeHistory(MemberInfo memberInfo, PointChargeCommand pointChargeCommand);
     PointHistoryInfo savePointUseHistory(MemberInfo memberInfo, PointUseCommand pointUseCommand);
     CartInfo findCartByMemberId(Long memberId);
-    List<CartProductInfo> findCartItemsById(Long memberId);
+    List<CartProductInfo> findCartProductsById(Long memberId);
+    List<CartProductInfo> findCartProductsByMemberIdWithLock(Long memberId);
     CartProductInfo addCartByProductId(CartInfo cartInfo, Long productId, Long cnt);
     void deleteCartByProductId(Long cartProductId);
 }

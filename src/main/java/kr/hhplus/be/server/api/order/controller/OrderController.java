@@ -1,20 +1,23 @@
 package kr.hhplus.be.server.api.order.controller;
 
-import kr.hhplus.be.server.api.order.request.OrderRequest;
 import kr.hhplus.be.server.api.order.response.OrderResponse;
-import kr.hhplus.be.server.api.product.response.ProductResponse;
+import kr.hhplus.be.server.application.order.OrderFacade;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
+@RestController
+@RequiredArgsConstructor
 public class OrderController implements OrderApi {
 
-    @Override
-    public ResponseEntity<List<OrderResponse>> createOrder(OrderRequest orderRequest) {
-        return ResponseEntity.ok(
-                List.of(
+    private final OrderFacade orderFacade;
 
-                )
-        );
+    @Override
+    public ResponseEntity<OrderResponse> createOrder(
+            @PathVariable final Long memberId
+    ) {
+        return ResponseEntity.ok(orderFacade.createOrder(memberId)
+                                           .toResponse());
     }
 }

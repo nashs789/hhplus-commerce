@@ -23,9 +23,7 @@ import static kr.hhplus.be.server.infra.coupon.entity.CouponHistory.CouponStatus
 @RequiredArgsConstructor
 public class CouponRepositoryImpl implements CouponRepository {
 
-    /** 쿠폰 정보 */
     private final CouponJpaRepository couponJpaRepository;
-    /** 쿠폰 발급 이력 */
     private final CouponHistoryJpaRepository couponHistoryJpaRepository;
 
     @Override

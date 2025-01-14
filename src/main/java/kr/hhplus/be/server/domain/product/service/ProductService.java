@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
 
-    /** 상품 조회 */
     private final ProductRepository productRepository;
 
     @Transactional(readOnly = true)

@@ -13,9 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CouponFacade {
 
-    /** 멤버 서비스 */
     private final MemberService memberService;
-    /** 쿠폰 서비스 */
     private final CouponService couponService;
 
     @Transactional

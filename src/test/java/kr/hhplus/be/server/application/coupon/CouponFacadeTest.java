@@ -49,7 +49,7 @@ class CouponFacadeTest {
                                                                .build();
         when(memberService.findMemberById(anyLong())).thenReturn(memberInfo);
         when(couponService.findCouponByIdWithLock(anyLong())).thenReturn(couponInfo);
-        when(couponFacade.applyCouponById(anyLong(), anyLong())).thenReturn(couponHistoryInfo);
+        when(couponFacade.applyCouponById(1L, 1L)).thenReturn(couponHistoryInfo);
 
         // when
         CouponHistoryInfo result = couponFacade.applyCouponById(1L, 1L);

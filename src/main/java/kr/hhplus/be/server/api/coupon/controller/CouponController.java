@@ -16,9 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CouponController implements CouponApi{
 
-    /** 쿠폰 서비스 */
     private final CouponService couponService;
-    /** 쿠폰 유즈케이스 */
     private final CouponFacade couponFacade;
 
     @Override

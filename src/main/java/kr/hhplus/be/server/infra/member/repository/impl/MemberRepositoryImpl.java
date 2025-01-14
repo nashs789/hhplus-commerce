@@ -2,6 +2,7 @@ package kr.hhplus.be.server.infra.member.repository.impl;
 
 import kr.hhplus.be.server.domain.member.command.PointChargeCommand;
 import kr.hhplus.be.server.domain.member.command.PointUseCommand;
+import kr.hhplus.be.server.domain.member.exception.CartException;
 import kr.hhplus.be.server.domain.member.exception.MemberException;
 import kr.hhplus.be.server.domain.member.info.CartInfo;
 import kr.hhplus.be.server.domain.member.info.CartProductInfo;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static kr.hhplus.be.server.domain.member.exception.CartException.CartExceptionCode.NO_SUCH_CART;
 import static kr.hhplus.be.server.domain.member.exception.MemberException.MemberExceptionCode.NO_SUCH_MEMBER;
 
 @Repository
@@ -92,21 +94,30 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public CartInfo findCartByMemberId(final Long memberId) {
         return cartJpaRepository.findCartByMemberId(memberId)
-                                .orElseThrow()
+                                .orElseThrow(() -> new CartException(NO_SUCH_CART))
                                 .toInfo();
     }
 
     @Override
-    public List<CartProductInfo> findCartItemsById(final Long memberId) {
-        return cartProductJpaRepository.findCartItemsByMemberId(memberId)
-                                       .orElseThrow()
+    public List<CartProductInfo> findCartProductsById(final Long memberId) {
+        return cartProductJpaRepository.findCartProductsByMemberId(memberId)
+                                       .orElseThrow(() -> new CartException(NO_SUCH_CART))
                                        .stream()
                                        .map(CartProduct::toInfo)
                                        .toList();
     }
 
     @Override
-    public CartProductInfo addCartByProductId(final CartInfo cartInfo, final Long productId, final Long cnt) {
+    public List<CartProductInfo> findCartProductsByMemberIdWithLock(final Long memberId) {
+        return cartProductJpaRepository.findCartProductsByMemberIdWithLock(memberId)
+                                       .orElseThrow(() -> new CartException(NO_SUCH_CART))
+                                       .stream()
+                                       .map(CartProduct::toInfo)
+                                       .toList();
+    }
+
+    @Override
+    public CartProductInfo addCartByProductId(final CartInfo cartInfo, final Long productId, final Long quantity) {
         Cart cart = Cart.builder()
                         .id(cartInfo.getId())
                         .member(Member.builder()
@@ -119,7 +130,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         CartProduct cartProduct = CartProduct.builder()
                                              .cart(cart)
                                              .product(product)
-                                             .cnt(cnt)
+                                             .quantity(quantity)
                                              .build();
 
         return cartProductJpaRepository.save(cartProduct)

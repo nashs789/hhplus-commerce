@@ -32,6 +32,11 @@ public class MemberService {
     }
 
     @Transactional
+    public MemberInfo findByMemberIdWithLock(final Long memberId) {
+        return memberRepository.findByMemberIdWithLock(memberId);
+    }
+
+    @Transactional
     public PointHistoryInfo chargeMemberPoint(final PointChargeCommand pointChargeCommand) {
         MemberInfo memberInfo = memberRepository.findByMemberIdWithLock(pointChargeCommand.getMemberId());
 
@@ -63,8 +68,12 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<CartProductInfo> findCartItemsByMemberId(final Long memberId) {
-        return memberRepository.findCartItemsById(memberId);
+    public List<CartProductInfo> findCartProductsByMemberId(final Long memberId) {
+        return memberRepository.findCartProductsById(memberId);
+    }
+    @Transactional
+    public List<CartProductInfo> findCartProductsByMemberIdWithLock(final Long memberId) {
+        return memberRepository.findCartProductsByMemberIdWithLock(memberId);
     }
 
     @Transactional

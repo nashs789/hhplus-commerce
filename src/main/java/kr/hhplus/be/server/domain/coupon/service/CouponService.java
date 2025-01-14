@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CouponService {
 
-    /** 쿠폰 레포 */
     private final CouponRepository couponRepository;
 
     @Transactional(readOnly = true)
