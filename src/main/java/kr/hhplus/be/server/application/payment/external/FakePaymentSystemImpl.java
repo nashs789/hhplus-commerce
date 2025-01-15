@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.payment.external;
+package kr.hhplus.be.server.application.payment.external;
 
 import kr.hhplus.be.server.domain.payment.exception.PaymentException;
 import org.springframework.stereotype.Component;

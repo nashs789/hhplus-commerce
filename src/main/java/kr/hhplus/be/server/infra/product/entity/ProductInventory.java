@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 public class ProductInventory extends Timestamp {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column

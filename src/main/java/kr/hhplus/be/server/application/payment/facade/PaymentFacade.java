@@ -1,14 +1,13 @@
-package kr.hhplus.be.server.application.payment;
+package kr.hhplus.be.server.application.payment.facade;
 
 import kr.hhplus.be.server.domain.member.command.PointUseCommand;
 import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import kr.hhplus.be.server.domain.member.service.MemberService;
 import kr.hhplus.be.server.domain.order.info.OrderInfo;
 import kr.hhplus.be.server.domain.order.service.OrderService;
-import kr.hhplus.be.server.domain.payment.external.PaymentSystem;
+import kr.hhplus.be.server.application.payment.external.PaymentSystem;
 import kr.hhplus.be.server.domain.payment.info.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.service.PaymentService;
-import kr.hhplus.be.server.infra.member.entity.PointHistory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +29,8 @@ public class PaymentFacade {
     public PaymentInfo paymentProgress(final Long memberId, final Long orderId) {
         MemberInfo memberInfo = memberService.findByMemberIdWithLock(memberId);
         OrderInfo orderInfo = orderService.findOrderById(orderId);
+
+        // TODO - 쿠폰 적용
 
         memberInfo.isAffordable(orderInfo.getFinalPrice());
         boolean paymentResult = paymentSystem.sendPayment(memberId, orderInfo.getFinalPrice());
