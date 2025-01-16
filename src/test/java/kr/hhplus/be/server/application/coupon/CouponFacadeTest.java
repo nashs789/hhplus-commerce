@@ -48,7 +48,6 @@ class CouponFacadeTest {
                                                                .status(NOT_USED)
                                                                .build();
         when(memberService.findMemberById(anyLong())).thenReturn(memberInfo);
-        when(couponService.findCouponByIdWithLock(anyLong())).thenReturn(couponInfo);
         when(couponFacade.applyCouponById(1L, 1L)).thenReturn(couponHistoryInfo);
 
         // when

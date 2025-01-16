@@ -19,8 +19,7 @@ public class CouponFacade {
     @Transactional
     public CouponHistoryInfo applyCouponById(final Long couponId, final Long memberId) {
         MemberInfo memberInfo = memberService.findMemberById(memberId);
-        CouponInfo couponById = couponService.findCouponByIdWithLock(couponId);
 
-        return couponService.applyPublishedCoupon(couponById, memberInfo);
+        return couponService.applyPublishedCoupon(couponId, memberInfo);
     }
 }

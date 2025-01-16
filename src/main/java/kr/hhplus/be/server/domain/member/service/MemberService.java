@@ -26,6 +26,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
+    public MemberInfo saveMember(final MemberInfo memberInfo) {
+        return memberRepository.saveMember(memberInfo);
+    }
+
     @Transactional(readOnly = true)
     public MemberInfo findMemberById(final Long memberId) {
         return memberRepository.findMemberById(memberId);
@@ -60,11 +65,6 @@ public class MemberService {
         }
 
         throw new PointException(FAIL_USE);
-    }
-
-    @Transactional(readOnly = true)
-    public CartInfo findCartByMemberId(final Long memberId) {
-        return memberRepository.findCartByMemberId(memberId);
     }
 
     @Transactional(readOnly = true)

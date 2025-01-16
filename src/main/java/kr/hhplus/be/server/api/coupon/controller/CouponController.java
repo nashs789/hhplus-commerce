@@ -32,7 +32,7 @@ public class CouponController implements CouponApi{
     public ResponseEntity<List<CouponHistoryResponse>> findCouponHistoryById(
             @PathVariable("memberId") final Long memberId
     ) {
-        return ResponseEntity.ok(couponService.findCouponHistoryById(memberId)
+        return ResponseEntity.ok(couponService.findCouponHistoryMemberById(memberId)
                                               .stream()
                                               .map(CouponHistoryInfo::toResponse)
                                               .toList());

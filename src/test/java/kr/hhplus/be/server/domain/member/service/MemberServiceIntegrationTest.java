@@ -44,7 +44,7 @@ class MemberServiceIntegrationTest {
     private Member member;
     private Cart cart;
     private Product product;
-    private List<CartProduct> cartProducts = new ArrayList<>();
+    private final List<CartProduct> cartProducts = new ArrayList<>();
 
     @Autowired
     private MemberService memberService;

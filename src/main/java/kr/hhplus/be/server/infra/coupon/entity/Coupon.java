@@ -3,16 +3,14 @@ package kr.hhplus.be.server.infra.coupon.entity;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@ToString
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
