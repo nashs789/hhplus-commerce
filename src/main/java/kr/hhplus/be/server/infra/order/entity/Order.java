@@ -40,9 +40,6 @@ public class Order extends Timestamp {
     private Long id;
 
     @Column
-    private Long finalPrice;
-
-    @Column
     private Long originalPrice;
 
     @Enumerated(EnumType.STRING)
@@ -66,8 +63,7 @@ public class Order extends Timestamp {
     public OrderInfo toInfo() {
         return OrderInfo.builder()
                         .id(id)
-                        .finalPrice(finalPrice)
-                        .originalPrice(finalPrice)
+                        .originalPrice(originalPrice)
                         .orderStatus(orderStatus)
                         .orderShipStatus(orderShipStatus)
                         .orderStatus(orderStatus)

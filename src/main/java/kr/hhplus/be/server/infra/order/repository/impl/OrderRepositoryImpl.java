@@ -34,12 +34,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public OrderInfo createOrder(final Long memberId, final Long finalPrice, final List<CartProductInfo> productsInCart) {
+    public OrderInfo createOrder(final Long memberId, final Long orderPrice, final List<CartProductInfo> productsInCart) {
         Order order = Order.builder()
                            .orderStatus(NOT_PAYED)
                            .orderShipStatus(NOT_DEPARTURE)
-                           .finalPrice(finalPrice)
-                           .originalPrice(finalPrice)
+                           .originalPrice(orderPrice)
                            .orderDetails(new ArrayList<>())
                            .member(Member.builder()
                                          .id(memberId)

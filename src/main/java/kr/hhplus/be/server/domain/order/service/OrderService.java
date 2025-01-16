@@ -25,10 +25,10 @@ public class OrderService {
             final List<CartProductInfo> productsInCart,
             final Long memberId
     ) {
-        final Long finalPrice = productsInCart.stream()
+        final Long orderPrice = productsInCart.stream()
                                               .mapToLong(e -> e.getProductInfo().getPrice() * e.getQuantity())
                                               .sum();
 
-        return orderRepository.createOrder(memberId, finalPrice, productsInCart);
+        return orderRepository.createOrder(memberId, orderPrice, productsInCart);
     }
 }

@@ -10,5 +10,5 @@ import java.util.List;
 public interface OrderRepository {
 
     OrderInfo findOrderById(Long orderId);
-    OrderInfo createOrder(Long memberId, Long finalPrice, List<CartProductInfo> productsInCart);
+    OrderInfo createOrder(Long memberId, Long orderPrice, List<CartProductInfo> productsInCart);
 }
