@@ -95,7 +95,7 @@ public class MemberController implements MemberApi {
 
     @Override
     public ResponseEntity<?> deleteCartById(
-            @PathVariable Long memberId,
+            @PathVariable Long cartId,
             @RequestBody List<CartDeleteRequest> cartDeleteRequests) {
 
         List<CartDeleteCommand> commands = cartDeleteRequests.stream()
@@ -106,7 +106,7 @@ public class MemberController implements MemberApi {
                                                                                               .build())
                                                              .toList();
 
-        memberService.deleteCartByProductId(memberId, commands);
+        memberService.deleteCartByProductId(commands);
 
         return ResponseEntity.ok(null);
     }

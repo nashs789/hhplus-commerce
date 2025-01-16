@@ -118,6 +118,6 @@ public interface MemberApi {
                     )
             }
     )
-    @PostMapping("/{memberId}/cart/delete")
-    ResponseEntity<?> deleteCartById(@PathVariable("memberId") Long memberId, @RequestBody List<CartDeleteRequest> cartDeleteRequests);
+    @PostMapping("/{cartId}/cart/delete")
+    ResponseEntity<?> deleteCartById(@PathVariable("cartId") Long cartId, @RequestBody List<CartDeleteRequest> cartDeleteRequests);
 }

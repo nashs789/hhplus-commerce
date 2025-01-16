@@ -91,7 +91,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteCartByProductId(final Long memberId, final List<CartDeleteCommand> cartDeleteCommand) {
+    public void deleteCartByProductId(final List<CartDeleteCommand> cartDeleteCommand) {
         for(CartDeleteCommand deleteCommand : cartDeleteCommand) {
             memberRepository.deleteCartByProductId(deleteCommand.getCartProductId());
         }
