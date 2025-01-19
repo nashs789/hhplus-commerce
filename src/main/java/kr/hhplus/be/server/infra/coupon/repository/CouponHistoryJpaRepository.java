@@ -16,6 +16,7 @@ public interface CouponHistoryJpaRepository extends JpaRepository<CouponHistory,
           FROM Coupon c
           JOIN CouponHistory ch
             ON c.id = ch.coupon.id
+         WHERE ch.member.id = :memberId
     """)
     Optional<List<CouponHistory>> findCouponHistoryMemberById(@Param("memberId") final Long memberId);
 

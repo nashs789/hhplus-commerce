@@ -117,7 +117,7 @@ class CouponServiceUnitTest {
         CouponHistoryInfo couponHistoryInfo = CouponHistoryInfo.builder()
                                                                .status(NOT_USED)
                                                                .build();
-        when(couponRepository.applyPublishedCoupon(couponInfo, any())).thenReturn(couponHistoryInfo);
+        when(couponRepository.applyPublishedCoupon(couponInfo, memberInfo.getId())).thenReturn(couponHistoryInfo);
         when(couponRepository.findCouponByIdWithLock(anyLong())).thenReturn(couponInfo);
 
         // when

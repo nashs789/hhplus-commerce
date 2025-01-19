@@ -93,11 +93,15 @@ class CouponServiceIntegrationTest {
         // given & when
         List<CouponHistoryInfo> result = couponService.findCouponHistoryMemberById(member.getId());
 
+        for (CouponHistoryInfo couponHistoryInfo : result) {
+            System.out.println(couponHistoryInfo);
+        }
+
         // then
         assertEquals(1, result.size());
         Assertions.assertThat(result.stream()
-                                      .map(CouponHistoryInfo::getMemberInfo)
-                                      .map(MemberInfo::getId))
+                                    .map(CouponHistoryInfo::getMemberInfo)
+                                    .map(MemberInfo::getId))
                   .containsExactly(member.getId());
     }
 
