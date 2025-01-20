@@ -8,7 +8,6 @@ import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import kr.hhplus.be.server.domain.member.service.MemberService;
 import kr.hhplus.be.server.domain.order.info.OrderInfo;
 import kr.hhplus.be.server.domain.order.service.OrderService;
-import kr.hhplus.be.server.domain.payment.exception.PaymentException;
 import kr.hhplus.be.server.domain.payment.info.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
-import static kr.hhplus.be.server.domain.payment.exception.PaymentException.PaymentExceptionCode.FAIL_PAYMENT;
 import static kr.hhplus.be.server.infra.coupon.entity.CouponHistory.CouponStatus.USED;
 import static kr.hhplus.be.server.infra.member.entity.PointHistory.PointUseType.USE;
 import static kr.hhplus.be.server.infra.order.entity.Order.OrderStatus.PAYED;
