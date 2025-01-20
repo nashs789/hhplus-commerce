@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 public class CartProduct extends Timestamp {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne

@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static kr.hhplus.be.server.domain.coupon.exception.CouponException.CouponExceptionCode.PUBLISH_DUPLICATED_COUPON;
+
 @Service
 @RequiredArgsConstructor
 public class CouponService {
@@ -27,15 +29,31 @@ public class CouponService {
         return couponRepository.findCouponByIdWithLock(couponId);
     }
 
-    @Transactional(readOnly = true)
-    public List<CouponHistoryInfo> findCouponHistoryById(final Long memberId) {
-        return couponRepository.findCouponHistoryById(memberId);
+    @Transactional
+    public CouponHistoryInfo findCouponHistoryByIdWithLock(final Long couponId, final Long memberId) {
+        return couponRepository.findCouponHistoryByIdWithLock(couponId, memberId);
     }
 
     @Transactional
-    public CouponHistoryInfo applyPublishedCoupon(final CouponInfo couponInfo, final MemberInfo memberInfo) {
+    public void changeCouponHistoryStatus(final CouponHistoryInfo couponHistoryInfo, final Long memberId) {
+        couponRepository.changeCouponHistoryStatus(couponHistoryInfo, memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CouponHistoryInfo> findCouponHistoryMemberById(final Long memberId) {
+        return couponRepository.findCouponHistoryMemberById(memberId);
+    }
+
+    @Transactional
+    public CouponHistoryInfo applyPublishedCoupon(final Long couponId, final MemberInfo memberInfo) {
+        CouponInfo couponInfo = couponRepository.findCouponByIdWithLock(couponId);
+
         couponInfo.checkAvailability();
 
-        return couponRepository.applyPublishedCoupon(couponInfo.getId(), memberInfo.getId());
+        if(couponRepository.isDuplicated(couponInfo.getId(), memberInfo.getId())) {
+            throw new CouponException(PUBLISH_DUPLICATED_COUPON);
+        }
+
+        return couponRepository.applyPublishedCoupon(couponInfo, memberInfo.getId());
     }
 }

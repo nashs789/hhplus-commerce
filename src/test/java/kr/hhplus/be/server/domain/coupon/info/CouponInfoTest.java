@@ -2,74 +2,49 @@ package kr.hhplus.be.server.domain.coupon.info;
 
 import kr.hhplus.be.server.domain.coupon.exception.CouponException;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 class CouponInfoTest {
 
-    @Test
-    @DisplayName("쿠폰 발급 유효성 통과")
-    void successPublishCoupon() {
+    @DisplayName("쿠폰 발급 수량에 따른 신청 성공 테스트")
+    @ParameterizedTest(name = "추가 발급 가능 테스트[{0}]")
+    @ValueSource(ints = {0, 1, 5, 10, 29})
+    void successCheckAvailabilityForQuantity(final int publishedQuantity) {
         // given
-        final Integer totalQuantity = 10;
-        final Integer publishedQuantity = 0;
-        LocalDateTime tomorrow = LocalDateTime.now()
-                                              .plusDays(1);
+        final int TOTAL_QUANTITY = 30;
         CouponInfo couponInfo = CouponInfo.builder()
-                                          .totalQuantity(totalQuantity)
+                                          .totalQuantity(TOTAL_QUANTITY)
                                           .publishedQuantity(publishedQuantity)
-                                          .expiredAt(tomorrow)
+                                          .expiredAt(LocalDateTime.now().plusDays(1))
                                           .build();
 
-        // when && then
+        // when & then
         assertDoesNotThrow(couponInfo::checkAvailability);
     }
 
-    @Test
-    @DisplayName("날짜가 만료된 쿠폰 발급 시도 실패")
-    void failPublishExpiredCoupon() {
+    @DisplayName("쿠폰 발급 수량에 따른 신청 실패 유효성 테스트")
+    @ParameterizedTest(name = "발급 수량 초과 유효성 테스트[{0}]")
+    @ValueSource(ints = {30, 31, 100})
+    void failCheckAvailabilityForQuantity(final int publishedQuantity) {
         // given
-        final Integer totalQuantity = 10;
-        final Integer publishedQuantity = 0;
-        LocalDateTime yesterday = LocalDateTime.now()
-                                               .minusDays(1);
+        final int TOTAL_QUANTITY = 30;
         CouponInfo couponInfo = CouponInfo.builder()
-                                          .totalQuantity(totalQuantity)
+                                          .totalQuantity(TOTAL_QUANTITY)
                                           .publishedQuantity(publishedQuantity)
-                                          .expiredAt(yesterday)
+                                          .expiredAt(LocalDateTime.now().plusDays(1))
                                           .build();
 
         // when
         CouponException couponException = assertThrows(CouponException.class, couponInfo::checkAvailability);
 
         // then
-        assertEquals(HttpStatus.BAD_REQUEST, couponException.getStatus());
-        assertEquals("유효하지 않은 쿠폰 입니다.", couponException.getMessage());
-    }
-
-    @Test
-    @DisplayName("발급 수량이 부족한 쿠폰 발급 시도 실패")
-    void failPublishNotCapableCoupon() {
-        // given
-        final Integer totalQuantity = 10;
-        final Integer publishedQuantity = 10;
-        LocalDateTime tomorrow = LocalDateTime.now()
-                                              .plusDays(1);
-        CouponInfo couponInfo = CouponInfo.builder()
-                                          .totalQuantity(totalQuantity)
-                                          .publishedQuantity(publishedQuantity)
-                                          .expiredAt(tomorrow)
-                                          .build();
-
-        // when
-        CouponException couponException = assertThrows(CouponException.class, couponInfo::checkAvailability);
-
-        // then
-        assertEquals(HttpStatus.BAD_REQUEST, couponException.getStatus());
+        assertEquals(BAD_REQUEST, couponException.getStatus());
         assertEquals("유효하지 않은 쿠폰 입니다.", couponException.getMessage());
     }
 }

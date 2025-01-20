@@ -36,11 +36,8 @@ public class Order extends Timestamp {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column
-    private Long finalPrice;
 
     @Column
     private Long originalPrice;
@@ -66,8 +63,7 @@ public class Order extends Timestamp {
     public OrderInfo toInfo() {
         return OrderInfo.builder()
                         .id(id)
-                        .finalPrice(finalPrice)
-                        .originalPrice(finalPrice)
+                        .originalPrice(originalPrice)
                         .orderStatus(orderStatus)
                         .orderShipStatus(orderShipStatus)
                         .orderStatus(orderStatus)

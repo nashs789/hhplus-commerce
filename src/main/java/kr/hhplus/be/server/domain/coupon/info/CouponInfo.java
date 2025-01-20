@@ -28,6 +28,8 @@ public class CouponInfo {
         || this.totalQuantity <= this.publishedQuantity) {
             throw new CouponException(NOT_VALID_COUPON);
         }
+
+        publishedQuantity += 1;
     }
 
     public CouponResponse toResponse(){

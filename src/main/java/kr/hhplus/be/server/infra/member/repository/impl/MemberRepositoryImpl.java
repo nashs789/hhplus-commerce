@@ -36,6 +36,14 @@ public class MemberRepositoryImpl implements MemberRepository {
     private final CartProductJpaRepository cartProductJpaRepository;
 
     @Override
+    public MemberInfo saveMember(MemberInfo memberInfo) {
+        return memberJpaRepository.save(Member.builder()
+                                              .point(memberInfo.getPoint())
+                                              .build())
+                                  .toInfo();
+    }
+
+    @Override
     public MemberInfo findMemberById(final Long memberId) {
         return memberJpaRepository.findById(memberId)
                                   .orElseThrow(() -> new MemberException(NO_SUCH_MEMBER))

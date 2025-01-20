@@ -21,14 +21,19 @@ public class OrderService {
     }
 
     @Transactional
+    public OrderInfo changeOrderStatus(final OrderInfo orderInfo) {
+        return null;
+    }
+
+    @Transactional
     public OrderInfo createOrder(
             final List<CartProductInfo> productsInCart,
             final Long memberId
     ) {
-        final Long finalPrice = productsInCart.stream()
+        final Long orderPrice = productsInCart.stream()
                                               .mapToLong(e -> e.getProductInfo().getPrice() * e.getQuantity())
                                               .sum();
 
-        return orderRepository.createOrder(memberId, finalPrice, productsInCart);
+        return orderRepository.createOrder(memberId, orderPrice, productsInCart);
     }
 }

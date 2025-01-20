@@ -3,6 +3,7 @@ package kr.hhplus.be.server.infra.payment.entity;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.payment.info.PaymentInfo;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
+import kr.hhplus.be.server.infra.coupon.entity.Coupon;
 import kr.hhplus.be.server.infra.order.entity.Order;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -30,8 +31,12 @@ public class Payment extends Timestamp {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
 
     @ManyToOne
     @JoinColumn(name = "order_id")

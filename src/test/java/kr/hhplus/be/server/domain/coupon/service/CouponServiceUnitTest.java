@@ -77,10 +77,10 @@ class CouponServiceUnitTest {
                 CouponHistoryInfo.builder().build(),
                 CouponHistoryInfo.builder().build()
         );
-        when(couponRepository.findCouponHistoryById(anyLong())).thenReturn(couponHistoryInfoList);
+        when(couponRepository.findCouponHistoryMemberById(anyLong())).thenReturn(couponHistoryInfoList);
 
         // when
-        List<CouponHistoryInfo> result = couponService.findCouponHistoryById(1L);
+        List<CouponHistoryInfo> result = couponService.findCouponHistoryMemberById(1L);
 
         // then
         assertEquals(couponHistoryInfoList.size(), result.size());
@@ -91,11 +91,11 @@ class CouponServiceUnitTest {
     @DisplayName("쿠폰 이력 없음")
     void findNoCouponHistory() {
         // given
-        when(couponRepository.findCouponHistoryById(anyLong())).thenThrow(new CouponException(NOT_EXIST_COUPON_HISTORY));
+        when(couponRepository.findCouponHistoryMemberById(anyLong())).thenThrow(new CouponException(NOT_EXIST_COUPON_HISTORY));
 
         // when
         CouponException couponException = assertThrows(CouponException.class, () ->
-                couponService.findCouponHistoryById(1L)
+                couponService.findCouponHistoryMemberById(1L)
         );
 
         // then
@@ -108,6 +108,7 @@ class CouponServiceUnitTest {
     void applyPublishedCoupon() {
         // given
         CouponInfo couponInfo = CouponInfo.builder()
+                                          .id(1L)
                                           .publishedQuantity(0)
                                           .totalQuantity(10)
                                           .expiredAt(LocalDateTime.now().plusDays(1))
@@ -116,10 +117,11 @@ class CouponServiceUnitTest {
         CouponHistoryInfo couponHistoryInfo = CouponHistoryInfo.builder()
                                                                .status(NOT_USED)
                                                                .build();
-        when(couponRepository.applyPublishedCoupon(any(), any())).thenReturn(couponHistoryInfo);
+        when(couponRepository.applyPublishedCoupon(couponInfo, memberInfo.getId())).thenReturn(couponHistoryInfo);
+        when(couponRepository.findCouponByIdWithLock(anyLong())).thenReturn(couponInfo);
 
         // when
-        CouponHistoryInfo result = couponService.applyPublishedCoupon(couponInfo, memberInfo);
+        CouponHistoryInfo result = couponService.applyPublishedCoupon(couponInfo.getId(), memberInfo);
 
         // then
         assertEquals(couponHistoryInfo, result);

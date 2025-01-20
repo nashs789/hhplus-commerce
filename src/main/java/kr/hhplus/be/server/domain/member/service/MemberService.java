@@ -26,6 +26,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
+    public MemberInfo saveMember(final MemberInfo memberInfo) {
+        return memberRepository.saveMember(memberInfo);
+    }
+
     @Transactional(readOnly = true)
     public MemberInfo findMemberById(final Long memberId) {
         return memberRepository.findMemberById(memberId);
@@ -63,11 +68,6 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public CartInfo findCartByMemberId(final Long memberId) {
-        return memberRepository.findCartByMemberId(memberId);
-    }
-
-    @Transactional(readOnly = true)
     public List<CartProductInfo> findCartProductsByMemberId(final Long memberId) {
         return memberRepository.findCartProductsById(memberId);
     }
@@ -91,7 +91,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteCartByProductId(final Long memberId, final List<CartDeleteCommand> cartDeleteCommand) {
+    public void deleteCartByProductId(final List<CartDeleteCommand> cartDeleteCommand) {
         for(CartDeleteCommand deleteCommand : cartDeleteCommand) {
             memberRepository.deleteCartByProductId(deleteCommand.getCartProductId());
         }

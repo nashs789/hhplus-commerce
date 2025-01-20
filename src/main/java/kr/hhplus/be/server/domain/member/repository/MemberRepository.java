@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface MemberRepository {
 
+    MemberInfo saveMember(MemberInfo memberInfo);
     MemberInfo findMemberById(Long memberId);
     MemberInfo findByMemberIdWithLock(Long memberId);
     boolean chargeMemberPoint(MemberInfo memberInfo);

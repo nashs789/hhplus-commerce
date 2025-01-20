@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.payment.external;
+package kr.hhplus.be.server.application.payment.external;
 
 public interface PaymentSystem {
 

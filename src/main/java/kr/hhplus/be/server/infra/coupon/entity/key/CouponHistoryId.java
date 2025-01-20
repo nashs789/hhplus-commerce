@@ -1,12 +1,12 @@
 package kr.hhplus.be.server.infra.coupon.entity.key;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
+@Getter
+@ToString
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
