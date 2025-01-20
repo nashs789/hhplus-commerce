@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PaymentRepository {
 
+    PaymentInfo findPaymentById(Long paymentId);
     PaymentInfo savePaymentResult(boolean result, OrderInfo orderInfo);
 }

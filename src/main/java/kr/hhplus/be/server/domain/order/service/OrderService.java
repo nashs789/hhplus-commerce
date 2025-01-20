@@ -21,6 +21,11 @@ public class OrderService {
     }
 
     @Transactional
+    public OrderInfo changeOrderStatus(final OrderInfo orderInfo) {
+        return null;
+    }
+
+    @Transactional
     public OrderInfo createOrder(
             final List<CartProductInfo> productsInCart,
             final Long memberId

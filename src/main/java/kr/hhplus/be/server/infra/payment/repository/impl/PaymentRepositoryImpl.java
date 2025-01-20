@@ -22,6 +22,12 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     private final PaymentJpaRepository paymentJpaRepository;
 
     @Override
+    public PaymentInfo findPaymentById(final Long paymentId) {
+        return paymentJpaRepository.findOneById(paymentId)
+                                   .toInfo();
+    }
+
+    @Override
     public PaymentInfo savePaymentResult(final boolean result, final OrderInfo orderInfo) {
         Order order = Order.builder()
                            .id(orderInfo.getId())

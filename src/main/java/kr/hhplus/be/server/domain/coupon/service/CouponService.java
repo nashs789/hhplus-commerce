@@ -29,6 +29,16 @@ public class CouponService {
         return couponRepository.findCouponByIdWithLock(couponId);
     }
 
+    @Transactional
+    public CouponHistoryInfo findCouponHistoryByIdWithLock(final Long couponId, final Long memberId) {
+        return couponRepository.findCouponHistoryByIdWithLock(couponId, memberId);
+    }
+
+    @Transactional
+    public void changeCouponHistoryStatus(final CouponHistoryInfo couponHistoryInfo, final Long memberId) {
+        couponRepository.changeCouponHistoryStatus(couponHistoryInfo, memberId);
+    }
+
     @Transactional(readOnly = true)
     public List<CouponHistoryInfo> findCouponHistoryMemberById(final Long memberId) {
         return couponRepository.findCouponHistoryMemberById(memberId);

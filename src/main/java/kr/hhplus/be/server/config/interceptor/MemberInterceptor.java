@@ -37,6 +37,7 @@ public class MemberInterceptor implements HandlerInterceptor {
         }
 
         try {
+            // TODO - request attribute 에 넣고 argument resolver 사용하면 좋을 듯
             memberService.findMemberById(Long.valueOf(memberId));
 
         } catch(MemberException me) {

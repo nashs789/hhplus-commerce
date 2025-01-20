@@ -41,6 +41,18 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
+    public CouponHistoryInfo findCouponHistoryByIdWithLock(final Long couponId, final Long memberId) {
+        return couponHistoryJpaRepository.findCouponHistoryByIdWithLock(couponId, memberId)
+                                         .orElseThrow(() -> new CouponException(NOT_EXIST_COUPON_HISTORY))
+                                         .toInfo();
+    }
+
+    @Override
+    public void changeCouponHistoryStatus(final CouponHistoryInfo couponHistoryInfo, final Long memberId) {
+        couponHistoryJpaRepository.changeCouponHistoryStatus(couponHistoryInfo.getId().getCouponId(), couponHistoryInfo.getStatus(), memberId);
+    }
+
+    @Override
     public List<CouponHistoryInfo> findCouponHistoryMemberById(final Long memberId) {
         return couponHistoryJpaRepository.findCouponHistoryMemberById(memberId)
                                          .orElseThrow(() -> new CouponException(NOT_EXIST_COUPON_HISTORY))

@@ -34,6 +34,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    public void changeOrderStatus(final OrderInfo orderInfo) {
+        orderJpaRepository.changeOrderStatus(orderInfo.getId(), orderInfo.getOrderStatus());
+    }
+
+    @Override
     public OrderInfo createOrder(final Long memberId, final Long orderPrice, final List<CartProductInfo> productsInCart) {
         Order order = Order.builder()
                            .orderStatus(NOT_PAYED)

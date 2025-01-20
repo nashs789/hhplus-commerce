@@ -10,5 +10,6 @@ import java.util.List;
 public interface OrderRepository {
 
     OrderInfo findOrderById(Long orderId);
+    void changeOrderStatus(OrderInfo orderInfo);
     OrderInfo createOrder(Long memberId, Long orderPrice, List<CartProductInfo> productsInCart);
 }
