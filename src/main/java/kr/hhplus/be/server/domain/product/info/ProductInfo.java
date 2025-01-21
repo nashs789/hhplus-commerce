@@ -4,6 +4,8 @@ import kr.hhplus.be.server.api.product.response.ProductResponse;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class ProductInfo {
@@ -11,6 +13,8 @@ public class ProductInfo {
     private String name;
     private Long price;
     private String image;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public ProductResponse toResponse() {
         return new ProductResponse(

@@ -13,4 +13,6 @@ public interface ProductRepository {
     List<ProductInfo> findProductsByIds(List<Long> ids);
     Page<ProductInfo> findAllProducts(Pageable pageable);
     ProductInventoryInfo findProductWithDetailById(Long productId);
+    ProductInventoryInfo findByProductIdWithLock(Long productId);
+    void reduceProductStock(ProductInventoryInfo productInventoryInfo);
 }

@@ -5,6 +5,7 @@ import kr.hhplus.be.server.domain.product.info.ProductInfo;
 import kr.hhplus.be.server.domain.product.info.ProductInventoryInfo;
 import kr.hhplus.be.server.domain.product.repository.ProductRepository;
 import kr.hhplus.be.server.infra.product.entity.Product;
+import kr.hhplus.be.server.infra.product.entity.ProductInventory;
 import kr.hhplus.be.server.infra.product.repository.ProductInventoryJpaRepository;
 import kr.hhplus.be.server.infra.product.repository.ProductJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +44,19 @@ public class ProductRepositoryImpl implements ProductRepository {
         return productInventoryJpaRepository.findByProductId(productId)
                                             .orElseThrow(() -> new ProductException(NO_SUCH_PRODUCT))
                                             .toInfo();
+    }
+
+    @Override
+    public ProductInventoryInfo findByProductIdWithLock(final Long productId) {
+        return productInventoryJpaRepository.findByProductIdWithLock(productId)
+                                            .orElseThrow(() -> new ProductException(NO_SUCH_PRODUCT))
+                                            .toInfo();
+    }
+
+    @Override
+    public void reduceProductStock(final ProductInventoryInfo productInventoryInfo) {
+        ProductInventory productInventory = ProductInventory.create(productInventoryInfo);
+
+        productInventoryJpaRepository.save(productInventory);
     }
 }

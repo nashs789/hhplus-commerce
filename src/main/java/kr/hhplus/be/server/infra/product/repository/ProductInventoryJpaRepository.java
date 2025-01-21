@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductInventoryJpaRepository extends JpaRepository<ProductInventory, Long> {
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
         SELECT pi
           FROM ProductInventory pi
@@ -20,4 +20,14 @@ public interface ProductInventoryJpaRepository extends JpaRepository<ProductInve
          WHERE p.id = :productId
     """)
     Optional<ProductInventory> findByProductId(@Param("productId") final Long productId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+        SELECT pi
+          FROM ProductInventory pi
+         WHERE pi.product.id = :productId
+    """)
+    Optional<ProductInventory> findByProductIdWithLock(@Param("productId") final Long productId);
+
+    Optional<List<ProductInventory>> findByIdIn(List<Long> productIds);
 }

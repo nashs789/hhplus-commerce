@@ -34,4 +34,13 @@ public class ProductService {
     public ProductInventoryInfo findProductWithDetailById(final Long productId) {
         return productRepository.findProductWithDetailById(productId);
     }
+
+    @Transactional
+    public void reduceProductStock(final Long productId, final Long quantity) {
+        ProductInventoryInfo productInventoryInfo = productRepository.findByProductIdWithLock(productId);
+
+        productInventoryInfo.checkStock(quantity);
+
+        productRepository.reduceProductStock(productInventoryInfo);
+    }
 }
