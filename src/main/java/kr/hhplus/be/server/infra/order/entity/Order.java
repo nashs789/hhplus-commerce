@@ -48,9 +48,8 @@ public class Order extends Timestamp {
     @Enumerated(EnumType.STRING)
     private OrderShipStatus orderShipStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Column
+    private Long memberId;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails = new ArrayList<>();

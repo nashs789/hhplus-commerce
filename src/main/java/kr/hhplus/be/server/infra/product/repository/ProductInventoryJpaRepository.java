@@ -25,9 +25,9 @@ public interface ProductInventoryJpaRepository extends JpaRepository<ProductInve
     @Query("""
         SELECT pi
           FROM ProductInventory pi
-         WHERE pi.product.id = :productId
+         WHERE pi.id = :productInventoryId
     """)
-    Optional<ProductInventory> findByProductIdWithLock(@Param("productId") final Long productId);
+    Optional<ProductInventory> findByProductInventoryWithLock(@Param("productInventoryId") final Long productInventoryId);
 
     Optional<List<ProductInventory>> findByIdIn(List<Long> productIds);
 }

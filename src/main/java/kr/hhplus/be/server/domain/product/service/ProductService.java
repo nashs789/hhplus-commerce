@@ -37,7 +37,7 @@ public class ProductService {
 
     @Transactional
     public void reduceProductStock(final Long productId, final Long quantity) {
-        ProductInventoryInfo productInventoryInfo = productRepository.findByProductIdWithLock(productId);
+        ProductInventoryInfo productInventoryInfo = productRepository.findByProductInventoryWithLock(productId);
 
         productInventoryInfo.checkStock(quantity);
 

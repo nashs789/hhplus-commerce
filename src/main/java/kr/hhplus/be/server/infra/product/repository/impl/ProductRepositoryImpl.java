@@ -47,8 +47,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public ProductInventoryInfo findByProductIdWithLock(final Long productId) {
-        return productInventoryJpaRepository.findByProductIdWithLock(productId)
+    public ProductInventoryInfo findByProductInventoryWithLock(final Long productInventoryId) {
+        return productInventoryJpaRepository.findByProductInventoryWithLock(productInventoryId)
                                             .orElseThrow(() -> new ProductException(NO_SUCH_PRODUCT))
                                             .toInfo();
     }
