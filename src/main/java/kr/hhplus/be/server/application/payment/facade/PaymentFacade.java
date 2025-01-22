@@ -16,12 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 
-import static kr.hhplus.be.server.infra.coupon.entity.CouponHistory.CouponStatus.USED;
 import static kr.hhplus.be.server.infra.member.entity.PointHistory.PointUseType.USE;
-import static kr.hhplus.be.server.infra.order.entity.Order.OrderStatus.PAYED;
 
 @Component
 @RequiredArgsConstructor
@@ -43,7 +40,7 @@ public class PaymentFacade {
         if(!Objects.isNull(couponId)) {
             CouponHistoryInfo couponHistoryInfo = couponService.findCouponHistoryByIdWithLock(couponId, memberId);
 
-            couponHistoryInfo.setStatus(USED);
+            couponHistoryInfo.useCoupon();
             couponService.changeCouponHistoryStatus(couponHistoryInfo, memberId);
             orderInfo.applyCoupon(couponHistoryInfo.getCouponInfo());
         }
@@ -65,7 +62,7 @@ public class PaymentFacade {
 
         PaymentInfo paymentInfo = paymentService.savePaymentResult(isPaymentOk, orderInfo);
 
-        orderInfo.setOrderStatus(PAYED);
+        orderInfo.orderPayDone();
         orderService.changeOrderStatus(orderInfo);
 
         for(OrderDetailInfo orderDetail : orderInfo.getOrderDetails()) {
