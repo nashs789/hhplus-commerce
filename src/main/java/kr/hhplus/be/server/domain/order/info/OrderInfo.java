@@ -9,6 +9,8 @@ import lombok.Data;
 
 import java.util.List;
 
+import static kr.hhplus.be.server.infra.order.entity.Order.OrderStatus.PAYED;
+
 @Data
 @Builder
 public class OrderInfo {
@@ -21,6 +23,10 @@ public class OrderInfo {
 
     public void applyCoupon(final CouponInfo couponInfo) {
         finalPrice = originalPrice - originalPrice * couponInfo.getRate() / 100;
+    }
+
+    public void orderPayDone() {
+        orderStatus = PAYED;
     }
 
     public OrderResponse toResponse() {
