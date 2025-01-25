@@ -119,7 +119,6 @@ class CouponServiceUnitTest {
                                                                .build();
         when(couponRepository.applyPublishedCoupon(couponInfo, memberInfo.getId())).thenReturn(couponHistoryInfo);
         when(couponRepository.findCouponById(anyLong())).thenReturn(couponInfo);
-
         // when
         CouponHistoryInfo result = couponService.applyPublishedCoupon(couponInfo.getId(), memberInfo);
 
