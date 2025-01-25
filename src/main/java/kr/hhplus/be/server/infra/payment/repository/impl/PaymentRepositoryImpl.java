@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.infra.payment.repository.impl;
 
-import jakarta.persistence.EntityManager;
 import kr.hhplus.be.server.domain.order.info.OrderInfo;
 import kr.hhplus.be.server.domain.payment.info.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.repository.PaymentRepository;
@@ -18,7 +17,6 @@ import static kr.hhplus.be.server.infra.payment.entity.Payment.PaymentStatus.SUC
 @RequiredArgsConstructor
 public class PaymentRepositoryImpl implements PaymentRepository {
 
-    private final EntityManager entityManager;
     private final PaymentJpaRepository paymentJpaRepository;
 
     @Override
@@ -38,11 +36,9 @@ public class PaymentRepositoryImpl implements PaymentRepository {
                                  .paymentMethod(CASH)
                                  .amount(orderInfo.getFinalPrice())
                                  .build();
-        entityManager.persist(payment);
-        entityManager.flush();
-        entityManager.clear();
 
-        return entityManager.find(Payment.class, payment.getId())
-                            .toInfo();
+
+        return paymentJpaRepository.save(payment)
+                                   .toInfo();
     }
 }

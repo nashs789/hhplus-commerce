@@ -9,7 +9,6 @@ import java.util.List;
 @Repository
 public interface CouponRepository {
     CouponInfo findCouponById(Long couponId);
-    CouponInfo findCouponByIdWithLock(Long couponId);
     CouponHistoryInfo findCouponHistoryByIdWithLock(Long couponId, Long memberId);
     void changeCouponHistoryStatus(CouponHistoryInfo couponHistoryInfo, Long memberId);
     List<CouponHistoryInfo> findCouponHistoryMemberById(Long memberId);

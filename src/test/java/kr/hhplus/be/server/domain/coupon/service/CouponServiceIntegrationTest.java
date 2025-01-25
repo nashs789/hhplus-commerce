@@ -107,7 +107,6 @@ class CouponServiceIntegrationTest {
 
     @Test
     @DisplayName("쿠폰 중복 발급 실패")
-    @Transactional
     void failPublishDuplicatedCoupon() {
         // given & when
         CouponException couponException = assertThrows(CouponException.class, () -> {

@@ -3,14 +3,12 @@ package kr.hhplus.be.server.infra.product.entity;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.product.info.ProductInfo;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
+@ToString
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -30,12 +28,25 @@ public class Product extends Timestamp {
     @Column
     private String image;
 
+    public static Product create(ProductInfo info) {
+        return Product.builder()
+                      .id(info.getId())
+                      .name(info.getName())
+                      .price(info.getPrice())
+                      .image(info.getImage())
+                      .createdAt(info.getCreatedAt())
+                      .updatedAt(info.getUpdatedAt())
+                      .build();
+    }
+
     public ProductInfo toInfo() {
         return ProductInfo.builder()
                           .id(id)
                           .name(name)
                           .price(price)
                           .image(image)
+                          .createdAt(getCreatedAt())
+                          .updatedAt(getUpdatedAt())
                           .build();
     }
 }

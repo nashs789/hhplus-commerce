@@ -5,6 +5,7 @@ import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
 import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.domain.member.info.MemberInfo;
+import kr.hhplus.be.server.global.aop.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +26,6 @@ public class CouponService {
     }
 
     @Transactional
-    public CouponInfo findCouponByIdWithLock(final Long couponId) {
-        return couponRepository.findCouponByIdWithLock(couponId);
-    }
-
-    @Transactional
     public CouponHistoryInfo findCouponHistoryByIdWithLock(final Long couponId, final Long memberId) {
         return couponRepository.findCouponHistoryByIdWithLock(couponId, memberId);
     }
@@ -44,9 +40,9 @@ public class CouponService {
         return couponRepository.findCouponHistoryMemberById(memberId);
     }
 
-    @Transactional
+    @DistributedLock(key = "#couponId")
     public CouponHistoryInfo applyPublishedCoupon(final Long couponId, final MemberInfo memberInfo) {
-        CouponInfo couponInfo = couponRepository.findCouponByIdWithLock(couponId);
+        CouponInfo couponInfo = couponRepository.findCouponById(couponId);
 
         couponInfo.checkAvailability();
 

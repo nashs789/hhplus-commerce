@@ -45,9 +45,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                            .orderShipStatus(NOT_DEPARTURE)
                            .originalPrice(orderPrice)
                            .orderDetails(new ArrayList<>())
-                           .member(Member.builder()
-                                         .id(memberId)
-                                         .build())
+                           .memberId(memberId)
                            .build();
         List<OrderDetail> orderDetails = productsInCart.stream()
                                                        .map(productInfo -> OrderDetail.builder()
