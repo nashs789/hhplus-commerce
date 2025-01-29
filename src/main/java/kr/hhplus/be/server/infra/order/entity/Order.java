@@ -3,7 +3,6 @@ package kr.hhplus.be.server.infra.order.entity;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.order.info.OrderInfo;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
-import kr.hhplus.be.server.infra.member.entity.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

@@ -55,7 +55,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void reduceProductStock(final ProductInventoryInfo productInventoryInfo) {
-        ProductInventory productInventory = ProductInventory.create(productInventoryInfo);
+        ProductInventory productInventory = ProductInventory.of(productInventoryInfo);
 
         productInventoryJpaRepository.save(productInventory);
     }

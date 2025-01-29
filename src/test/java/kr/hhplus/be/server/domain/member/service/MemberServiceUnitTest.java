@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.member.service;
 
 import kr.hhplus.be.server.domain.member.command.CartAddCommand;
+import kr.hhplus.be.server.domain.member.command.CartDeleteCommand;
 import kr.hhplus.be.server.domain.member.command.PointChargeCommand;
 import kr.hhplus.be.server.domain.member.command.PointUseCommand;
 import kr.hhplus.be.server.domain.member.exception.CartException;
@@ -12,7 +13,6 @@ import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import kr.hhplus.be.server.domain.member.info.PointHistoryInfo;
 import kr.hhplus.be.server.domain.member.repository.MemberRepository;
 import kr.hhplus.be.server.domain.product.info.ProductInfo;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,8 +27,7 @@ import static kr.hhplus.be.server.domain.member.exception.CartException.CartExce
 import static kr.hhplus.be.server.domain.member.exception.MemberException.MemberExceptionCode.NO_SUCH_MEMBER;
 import static kr.hhplus.be.server.domain.member.exception.PointException.PointExceptionCode.FAIL_CHARGE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -256,5 +255,21 @@ class MemberServiceUnitTest {
 
         // then
         assertThat(result).containsExactlyInAnyOrderElementsOf(List.of(productA));
+    }
+
+    @Test
+    @DisplayName("장바구니 상품 리스트 삭제")
+    void deleteProductFromCart() {
+        // given
+        final List<CartDeleteCommand> deleteList = List.of(
+                CartDeleteCommand.builder().cartProductId(1L).build(),
+                CartDeleteCommand.builder().cartProductId(2L).build(),
+                CartDeleteCommand.builder().cartProductId(3L).build()
+        );
+
+        // when && then
+        assertDoesNotThrow(() -> {
+            memberService.deleteCartByProductId(deleteList);
+        });
     }
 }

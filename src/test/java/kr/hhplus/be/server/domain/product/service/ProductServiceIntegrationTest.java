@@ -1,21 +1,19 @@
 package kr.hhplus.be.server.domain.product.service;
 
 import kr.hhplus.be.server.domain.product.exception.ProductException;
-import kr.hhplus.be.server.infra.product.entity.Product;
 import kr.hhplus.be.server.infra.product.entity.ProductInventory;
 import kr.hhplus.be.server.infra.product.repository.ProductInventoryJpaRepository;
 import kr.hhplus.be.server.infra.product.repository.ProductJpaRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,12 +22,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
+@Sql(
+        scripts = {
+                "/test-product-data.sql",
+                "/test-product-inventory-data.sql"
+        },
+        config = @SqlConfig(encoding = "UTF-8")
+)
 @SpringBootTest
 @Testcontainers
 class ProductServiceIntegrationTest {
 
-    final int PRODUCT_COUNT = 5;
-    List<Long> idList = new ArrayList<>();
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private ProductJpaRepository productJpaRepository;
@@ -37,31 +42,12 @@ class ProductServiceIntegrationTest {
     @Autowired
     private ProductInventoryJpaRepository productInventoryJpaRepository;
 
-    @Autowired
-    private ProductService productService;
-
-    @BeforeEach
-    void setUp() {
-        idList.clear();
-
-        for(int i = 0; i < PRODUCT_COUNT; i++) {
-            Product product = productJpaRepository.save(Product.builder()
-                                                               .name("테스트 상품")
-                                                               .build());
-            idList.add(productInventoryJpaRepository.save(ProductInventory.builder()
-                                                                          .stock(10L)
-                                                                          .product(product)
-                                                                          .build())
-                                                                          .getId());
-        }
-    }
-
     @Test
     @DisplayName("재고 부족 테스트")
     @Transactional
     void insufficientStock() {
         // given
-        final Long PRODUCT_INVENTORY_ID = Objects.requireNonNull(idList).get(0);
+        final Long PRODUCT_INVENTORY_ID = 1L;
         final Long REDUCE_QUANTITY = 11L;
 
         // when
@@ -80,6 +66,7 @@ class ProductServiceIntegrationTest {
     void reduceProductStock() {
         // given
         final Long REDUCE_QUANTITY = 10L;
+        List<Long> idList = List.of(1L, 2L, 3L, 4L, 5L);
 
         // when
         for(Long productInventoryId : idList) {
@@ -100,7 +87,7 @@ class ProductServiceIntegrationTest {
     @DisplayName("재고 감소 동시성 테스트")
     void reduceProductStockWithConcurrency() throws InterruptedException {
         // given
-        final Long PRODUCT_INVENTORY_ID = Objects.requireNonNull(idList).get(0);
+        final Long PRODUCT_INVENTORY_ID = 1L;
         final ExecutorService executor = Executors.newFixedThreadPool(30);
         final CountDownLatch successLatch = new CountDownLatch(10);
         final CountDownLatch failLatch = new CountDownLatch(20);
