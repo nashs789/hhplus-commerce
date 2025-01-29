@@ -1,60 +1,69 @@
 package kr.hhplus.be.server.application.coupon;
 
-import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
-import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
-import kr.hhplus.be.server.domain.coupon.service.CouponService;
 import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import kr.hhplus.be.server.domain.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.LocalDateTime;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import static kr.hhplus.be.server.infra.coupon.entity.CouponHistory.CouponStatus.NOT_USED;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
+@Sql(
+        scripts = {
+                "/test-coupon-data.sql",
+                "/test-member-data.sql",
+                "/test-coupon-history-data.sql",
+        },
+        config = @SqlConfig(encoding = "UTF-8")
+)
+@SpringBootTest
+@Testcontainers
 class CouponFacadeTest {
 
-    @Mock
+    @Autowired
     private MemberService memberService;
 
-    @Mock
-    private CouponService couponService;
-
-    @InjectMocks
+    @Autowired
     private CouponFacade couponFacade;
 
     @Test
-    @DisplayName("쿠폰 정상 발급")
-    void successPublishCoupon() {
+    @DisplayName("쿠폰 발급 동시성 테스트")
+    void tryApplyDuplicatedCoupon() throws InterruptedException {
         // given
-        MemberInfo memberInfo = MemberInfo.builder()
-                                          .build();
-        CouponInfo couponInfo = CouponInfo.builder()
-                                          .publishedQuantity(0)
-                                          .totalQuantity(10)
-                                          .expiredAt(LocalDateTime.now().plusDays(1))
-                                          .build();
-        CouponHistoryInfo couponHistoryInfo = CouponHistoryInfo.builder()
-                                                               .memberInfo(memberInfo)
-                                                               .couponInfo(couponInfo)
-                                                               .status(NOT_USED)
-                                                               .build();
-        when(memberService.findMemberById(anyLong())).thenReturn(memberInfo);
-        when(couponFacade.applyCouponById(1L, 1L)).thenReturn(couponHistoryInfo);
+        final int TEST_CNT = 60;
+        final ExecutorService executor = Executors.newFixedThreadPool(TEST_CNT);
+        final CountDownLatch succeedLatch = new CountDownLatch(30);
+        final CountDownLatch failLatch = new CountDownLatch(30);
 
         // when
-        CouponHistoryInfo result = couponFacade.applyCouponById(1L, 1L);
+        for(long i = 1; i <= TEST_CNT; i++) {
+            final long memberId = i;
+
+            executor.submit(() -> {
+                try {
+                    MemberInfo member = memberService.findMemberById(memberId);
+                    couponFacade.applyCouponById(2L, member.getId());
+
+                    succeedLatch.countDown();
+                } catch(Exception e) {
+                    failLatch.countDown();
+                }
+            });
+        }
+
+        succeedLatch.await();
+        failLatch.await();
 
         // then
-        assertEquals(memberInfo, result.getMemberInfo());
-        assertEquals(couponInfo, result.getCouponInfo());
+        assertEquals(0, succeedLatch.getCount());
+        assertEquals(0, failLatch.getCount());
     }
 }

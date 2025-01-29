@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Objects;
 
 import static kr.hhplus.be.server.infra.order.entity.Order.OrderStatus.PAYED;
 
@@ -27,6 +28,12 @@ public class OrderInfo {
 
     public void orderPayDone() {
         orderStatus = PAYED;
+    }
+
+    public Long getFinalPrice() {
+        return Objects.isNull(finalPrice)
+             ? originalPrice
+             : finalPrice;
     }
 
     public OrderResponse toResponse() {

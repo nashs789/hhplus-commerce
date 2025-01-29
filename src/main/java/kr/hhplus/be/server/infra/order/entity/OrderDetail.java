@@ -33,13 +33,21 @@ public class OrderDetail extends Timestamp {
     @Column
     private Long quantity;
 
-    public void setOrder(Order order) {
+    public void setOrder(final Order order) {
         this.order = order;
+    }
+
+    public static OrderDetail of(final OrderDetailInfo orderDetailInfo) {
+        return OrderDetail.builder()
+                          .id(orderDetailInfo.getId())
+                          .product(Product.of(orderDetailInfo.getProductInfo()))
+                          .build();
     }
 
     public OrderDetailInfo toInfo() {
         return OrderDetailInfo.builder()
                               .id(id)
+                              .quantity(quantity)
                               .productInfo(product.toInfo())
                               .build();
     }

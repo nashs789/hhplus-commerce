@@ -8,24 +8,15 @@ import kr.hhplus.be.server.domain.member.exception.PointException;
 import kr.hhplus.be.server.domain.member.info.CartProductInfo;
 import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import kr.hhplus.be.server.domain.product.info.ProductInfo;
-import kr.hhplus.be.server.infra.member.entity.Cart;
-import kr.hhplus.be.server.infra.member.entity.CartProduct;
-import kr.hhplus.be.server.infra.member.entity.Member;
-import kr.hhplus.be.server.infra.member.repository.CartJpaRepository;
-import kr.hhplus.be.server.infra.member.repository.CartProductJpaRepository;
-import kr.hhplus.be.server.infra.member.repository.MemberJpaRepository;
-import kr.hhplus.be.server.infra.product.entity.Product;
-import kr.hhplus.be.server.infra.product.repository.ProductJpaRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -37,72 +28,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
+@Sql(
+        scripts = {
+                "/test-member-data.sql",
+                "/test-cart-data.sql",
+                "/test-product-data.sql",
+                "/test-cart-product-data.sql"
+        },
+        config = @SqlConfig(encoding = "UTF-8")
+)
 @SpringBootTest
 @Testcontainers
 class MemberServiceIntegrationTest {
 
-    private final Long BASE_POINT = 100_000L;
-    private Member member;
-    private Cart cart;
-    private Product product;
-    private final List<CartProduct> cartProducts = new ArrayList<>();
+    final Long MEMBER_ID = 1L;
 
     @Autowired
     private MemberService memberService;
-
-    @Autowired
-    private MemberJpaRepository memberJpaRepository;
-
-    @Autowired
-    private CartJpaRepository cartJpaRepository;
-
-    @Autowired
-    private CartProductJpaRepository cartProductJpaRepository;
-
-    @Autowired
-    private ProductJpaRepository productJpaRepository;
-
-    @BeforeEach
-    void setUp() {
-        member = memberJpaRepository.save(Member.builder()
-                                                .point(BASE_POINT)
-                                                .build());
-        cart = cartJpaRepository.save(Cart.builder()
-                                               .member(member)
-                                               .build());
-        product = productJpaRepository.save(Product.builder()
-                                                   .name("테스트 상품")
-                                                   .price(5_000L)
-                                                   .build());
-        productJpaRepository.save(product);
-
-        List<String> names = List.of("상품 A", "상품 B");
-
-        for(int i = 0; i < names.size(); i++) {
-            Product productInCart = productJpaRepository.save(Product.builder()
-                                                        .name(names.get(i))
-                                                        .price(1_000L * i)
-                                                        .build());
-
-            cartProducts.add(
-                    cartProductJpaRepository.save(CartProduct.builder()
-                                                             .cart(cart)
-                                                             .quantity(10L)
-                                                             .product(productInCart)
-                                                             .build()
-                    )
-            );
-        }
-    }
 
     @Test
     @DisplayName("멤버 조회")
     void findMemberById() {
         // given & when
-        MemberInfo result = memberService.findMemberById(member.getId());
+        MemberInfo result = memberService.findMemberById(MEMBER_ID);
 
         // then
-        assertEquals(member.getId(), result.getId());
+        assertEquals(MEMBER_ID, result.getId());
     }
 
     @Test
@@ -111,6 +62,7 @@ class MemberServiceIntegrationTest {
         // given
         final int TEST_CNT = 30;
         final long CHARGE_POINT = 10_000L;
+        final Long BASE_POINT = memberService.findMemberById(MEMBER_ID).getPoint();
         ExecutorService executor = Executors.newFixedThreadPool(30);
         CountDownLatch latch = new CountDownLatch(TEST_CNT);
 
@@ -119,7 +71,7 @@ class MemberServiceIntegrationTest {
             executor.submit(() -> {
                 try {
                     memberService.chargeMemberPoint(PointChargeCommand.builder()
-                                                                      .memberId(member.getId())
+                                                                      .memberId(MEMBER_ID)
                                                                       .chargePoint(CHARGE_POINT)
                                                                       .pointUseType(CHARGE)
                                                                       .build());
@@ -131,7 +83,7 @@ class MemberServiceIntegrationTest {
 
         latch.await();
 
-        MemberInfo result = memberService.findMemberById(member.getId());
+        MemberInfo result = memberService.findMemberById(MEMBER_ID);
 
         // then
         final Long FINAL_POINT = BASE_POINT + TEST_CNT * CHARGE_POINT;
@@ -146,7 +98,8 @@ class MemberServiceIntegrationTest {
         // given
         final int TEST_CNT = 10;
         final long USE_POINT = 10_000L;
-        ExecutorService executor = Executors.newFixedThreadPool(30);
+        final Long BASE_POINT = memberService.findMemberById(MEMBER_ID).getPoint();
+        ExecutorService executor = Executors.newFixedThreadPool(10);
         CountDownLatch latch = new CountDownLatch(TEST_CNT);
 
         // when
@@ -154,7 +107,7 @@ class MemberServiceIntegrationTest {
             executor.submit(() -> {
                 try {
                     memberService.useMemberPoint(PointUseCommand.builder()
-                                                                .memberId(member.getId())
+                                                                .memberId(MEMBER_ID)
                                                                 .usePoint(USE_POINT)
                                                                 .pointUseType(USE)
                                                                 .build());
@@ -166,23 +119,25 @@ class MemberServiceIntegrationTest {
 
         latch.await();
 
-        MemberInfo result = memberService.findMemberById(member.getId());
+        MemberInfo result = memberService.findMemberById(MEMBER_ID);
+        final Long FINAL_POINT = BASE_POINT - (TEST_CNT * USE_POINT);
 
         // then
         assertEquals(0L, result.getPoint());
-        assertEquals(0, latch.getCount());
+        assertEquals(FINAL_POINT, latch.getCount());
     }
 
     @Test
     @DisplayName("포인트 사용 실패")
     void failUseMemberPoint() {
         // given
+        final Long BASE_POINT = memberService.findMemberById(MEMBER_ID).getPoint();
         final Long USE_POINT = BASE_POINT + 1L;
 
         // when
         PointException pointException = assertThrows(PointException.class, () ->
                 memberService.useMemberPoint(PointUseCommand.builder()
-                                                            .memberId(member.getId())
+                                                            .memberId(MEMBER_ID)
                                                             .usePoint(USE_POINT)
                                                             .pointUseType(USE)
                                                             .build())
@@ -198,7 +153,7 @@ class MemberServiceIntegrationTest {
     @DisplayName("장바구니 등록 상품 조회")
     void findCartByMemberId() {
         // given & when
-        List<CartProductInfo> result = memberService.findCartProductsByMemberId(member.getId());
+        List<CartProductInfo> result = memberService.findCartProductsByMemberId(MEMBER_ID);
 
         // then
         assertEquals(2, result.size());
@@ -213,35 +168,38 @@ class MemberServiceIntegrationTest {
     @DisplayName("장바구니 상품 추가")
     void addProductToCart() {
         // given
+        final Long NEW_PRODUCT_ID = 3L;
         final List<CartAddCommand> cartAddCommands = List.of(CartAddCommand.builder()
-                                                                           .productId(product.getId())
+                                                                           .productId(NEW_PRODUCT_ID)
                                                                            .cnt(5L)
                                                                            .build());
 
         // when
-        List<CartProductInfo> result = memberService.addCartByProductId(member.getId(), cartAddCommands);
-
-        System.out.println(result.get(0));
+        List<CartProductInfo> result = memberService.addCartByProductId(MEMBER_ID, cartAddCommands);
 
         // then
-        assertEquals(1, result.size());
-        assertEquals(product.getId(), result.get(0).getProductInfo().getId());
+        assertEquals(cartAddCommands.size(), result.size());
+        assertEquals(NEW_PRODUCT_ID, result.get(0).getProductInfo().getId());
     }
 
     @Test
     @DisplayName("장바구니 상품 삭제")
     void deleteProductFromCart() {
         // given
-        List<CartDeleteCommand> deleteCommands = cartProducts.stream()
-                                                             .map(e -> CartDeleteCommand.builder()
-                                                                                        .cartProductId(e.getId())
-                                                                                        .build()
-                                                             )
-                                                             .toList();
+        List<Long> idList = memberService.findCartProductsByMemberId(1L)
+                                         .stream()
+                                         .map(CartProductInfo::getId)
+                                         .toList();
+        List<CartDeleteCommand> deleteCommands = idList.stream()
+                                                       .map(e -> CartDeleteCommand.builder()
+                                                                                  .cartProductId(e)
+                                                                                  .build()
+                                                       )
+                                                       .toList();
 
         // when
         memberService.deleteCartByProductId(deleteCommands);
-        List<CartProductInfo> result = memberService.findCartProductsByMemberId(member.getId());
+        List<CartProductInfo> result = memberService.findCartProductsByMemberId(MEMBER_ID);
 
         // then
         assertEquals(0, result.size());

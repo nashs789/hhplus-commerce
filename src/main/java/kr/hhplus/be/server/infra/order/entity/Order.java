@@ -3,7 +3,6 @@ package kr.hhplus.be.server.infra.order.entity;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.domain.order.info.OrderInfo;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
-import kr.hhplus.be.server.infra.member.entity.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -57,6 +56,19 @@ public class Order extends Timestamp {
     public void addOrderDetail(OrderDetail orderDetail) {
         this.orderDetails.add(orderDetail);
         orderDetail.setOrder(this);
+    }
+
+    public static Order of(final OrderInfo orderInfo) {
+        return Order.builder()
+                    .id(orderInfo.getId())
+                    .originalPrice(orderInfo.getOriginalPrice())
+                    .orderStatus(orderInfo.getOrderStatus())
+                    .orderShipStatus(orderInfo.getOrderShipStatus())
+                    .orderDetails(orderInfo.getOrderDetails()
+                                          .stream()
+                                          .map(OrderDetail::of)
+                                          .toList())
+                    .build();
     }
 
     public OrderInfo toInfo() {
