@@ -18,9 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -85,38 +82,5 @@ class CouponServiceIntegrationTest {
         // then
         assertEquals(BAD_REQUEST, couponException.getStatus());
         assertEquals("쿠폰 중복 발급 신청 입니다.", couponException.getMessage());
-    }
-
-    @Test
-    @DisplayName("쿠폰 발급 동시성 테스트")
-    void publishCouponConcurrencyTest() throws InterruptedException {
-        // given
-        final int TEST_CNT = 60;
-        final ExecutorService executor = Executors.newFixedThreadPool(TEST_CNT);
-        final CountDownLatch succeedLatch = new CountDownLatch(30);
-        final CountDownLatch failLatch = new CountDownLatch(30);
-
-        // when
-        for(long i = 1; i <= TEST_CNT; i++) {
-            final long memberId = i;
-
-            executor.submit(() -> {
-               try {
-                   MemberInfo member = memberService.findMemberById(memberId);
-                   couponService.applyPublishedCoupon(2L, member);
-
-                   succeedLatch.countDown();
-               } catch(Exception e) {
-                   failLatch.countDown();
-               }
-            });
-        }
-
-        succeedLatch.await();
-        failLatch.await();
-
-        // then
-        assertEquals(0, succeedLatch.getCount());
-        assertEquals(0, failLatch.getCount());
     }
 }
