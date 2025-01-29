@@ -58,6 +58,19 @@ public class Order extends Timestamp {
         orderDetail.setOrder(this);
     }
 
+    public static Order of(final OrderInfo orderInfo) {
+        return Order.builder()
+                    .id(orderInfo.getId())
+                    .originalPrice(orderInfo.getOriginalPrice())
+                    .orderStatus(orderInfo.getOrderStatus())
+                    .orderShipStatus(orderInfo.getOrderShipStatus())
+                    .orderDetails(orderInfo.getOrderDetails()
+                                          .stream()
+                                          .map(OrderDetail::of)
+                                          .toList())
+                    .build();
+    }
+
     public OrderInfo toInfo() {
         return OrderInfo.builder()
                         .id(id)

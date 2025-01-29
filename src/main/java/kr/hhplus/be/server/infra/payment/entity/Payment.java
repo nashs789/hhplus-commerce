@@ -1,12 +1,17 @@
 package kr.hhplus.be.server.infra.payment.entity;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.domain.order.info.OrderInfo;
 import kr.hhplus.be.server.domain.payment.info.PaymentInfo;
 import kr.hhplus.be.server.infra.common.entity.Timestamp;
 import kr.hhplus.be.server.infra.coupon.entity.Coupon;
 import kr.hhplus.be.server.infra.order.entity.Order;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import static kr.hhplus.be.server.infra.payment.entity.Payment.PaymentMethod.CASH;
+import static kr.hhplus.be.server.infra.payment.entity.Payment.PaymentStatus.FAIL;
+import static kr.hhplus.be.server.infra.payment.entity.Payment.PaymentStatus.SUCCESS;
 
 @Entity
 @Getter
@@ -50,6 +55,16 @@ public class Payment extends Timestamp {
 
     @Column
     private Long amount;
+
+    public static Payment of(final OrderInfo orderInfo, final boolean result) {
+        return Payment.builder()
+                      // .coupon() TODO - 이거 생각 못했네...
+                      .order(Order.of(orderInfo))
+                      .paymentStatus(result ? SUCCESS : FAIL)
+                      .paymentMethod(CASH)
+                      .amount(orderInfo.getFinalPrice())
+                      .build();
+    }
 
     public PaymentInfo toInfo() {
         return PaymentInfo.builder()

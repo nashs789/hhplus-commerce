@@ -16,7 +16,6 @@ public class CouponFacade {
     private final MemberService memberService;
     private final CouponService couponService;
 
-    @Transactional
     public CouponHistoryInfo applyCouponById(final Long couponId, final Long memberId) {
         MemberInfo memberInfo = memberService.findMemberById(memberId);
 
