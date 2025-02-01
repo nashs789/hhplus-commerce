@@ -67,5 +67,5 @@ public interface ProductApi {
             }
     )
     @GetMapping("/ranking")
-    public ResponseEntity<List<ProductResponse>> findProductRanking();
+    ResponseEntity<List<ProductResponse>> findFamousProductsInThreeDays();
 }

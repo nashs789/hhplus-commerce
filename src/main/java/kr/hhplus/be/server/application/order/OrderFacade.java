@@ -6,11 +6,13 @@ import kr.hhplus.be.server.domain.member.service.MemberService;
 import kr.hhplus.be.server.domain.order.info.OrderInfo;
 import kr.hhplus.be.server.domain.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class OrderFacade {

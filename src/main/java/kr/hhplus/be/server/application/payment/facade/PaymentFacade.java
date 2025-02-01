@@ -11,12 +11,14 @@ import kr.hhplus.be.server.domain.order.info.OrderInfo;
 import kr.hhplus.be.server.domain.order.service.OrderService;
 import kr.hhplus.be.server.domain.payment.info.PaymentInfo;
 import kr.hhplus.be.server.domain.payment.service.PaymentService;
+import kr.hhplus.be.server.domain.product.info.ProductInfo;
 import kr.hhplus.be.server.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static kr.hhplus.be.server.infra.member.entity.PointHistory.PointUseType.USE;
 
@@ -76,5 +78,32 @@ public class PaymentFacade {
         paymentInfo.setOrderInfo(orderInfo);
 
         return paymentInfo;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductInfo> findFamousProductsInThreeDays() {
+        LinkedHashMap<ProductInfo, Long> productSellingCountingMap = paymentService.findCurrentThreeDaysPayment()
+                                                                                   .stream()
+                                                                                   .map(PaymentInfo::getOrderInfo)
+                                                                                   .flatMap(e -> e.getOrderDetails().stream())
+                                                                                   .collect(Collectors.toMap(
+                                                                                           OrderDetailInfo::getProductInfo, OrderDetailInfo::getQuantity, Long::sum)
+                                                                                   )
+                                                                                   .entrySet()
+                                                                                   .stream()
+                                                                                   .sorted(Map.Entry.<ProductInfo, Long>comparingByValue().reversed())
+                                                                                   .collect(Collectors.toMap(
+                                                                                           Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new
+                                                                                   ));
+        Iterator<ProductInfo> iterator = productSellingCountingMap.keySet().iterator();
+        List<ProductInfo> rankingFive = new ArrayList<>();
+        int rank = 1;
+
+        while(rank <= 5 && iterator.hasNext()) {
+            rankingFive.add(iterator.next());
+            rank++;
+        }
+
+        return rankingFive;
     }
 }

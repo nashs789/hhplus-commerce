@@ -14,6 +14,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // TODO - */{memberId} 너무 포괄적임
         registry.addInterceptor(memberInterceptor)
                 .addPathPatterns(
                         "/api/v1/*/point/{memberId}",
@@ -25,6 +26,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
                         "/api/v1/*/{couponId}/member/{memberId}",
                         "/api/v1/*/{memberId}",
                         "/api/v1/*/member/{memberId}/order/{orderId}"
+                )
+                .excludePathPatterns(
+                        "/api/v1/product/ranking"
                 );
     }
 }

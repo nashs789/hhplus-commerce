@@ -2,11 +2,10 @@ package kr.hhplus.be.server.api.product.controller;
 
 import kr.hhplus.be.server.api.product.response.ProductInventoryResponse;
 import kr.hhplus.be.server.api.product.response.ProductResponse;
+import kr.hhplus.be.server.application.payment.facade.PaymentFacade;
 import kr.hhplus.be.server.domain.product.info.ProductInfo;
-import kr.hhplus.be.server.domain.product.info.ProductInventoryInfo;
 import kr.hhplus.be.server.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +19,7 @@ import java.util.List;
 public class ProductController implements ProductApi {
 
     private final ProductService productService;
+    private final PaymentFacade paymentFacade;
 
     @Override
     public ResponseEntity<Page<ProductResponse>> findAllProducts(
@@ -39,11 +39,10 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public ResponseEntity<List<ProductResponse>> findProductRanking() {
-        return ResponseEntity.ok(
-                List.of(
-
-                )
-        );
+    public ResponseEntity<List<ProductResponse>> findFamousProductsInThreeDays() {
+        return ResponseEntity.ok(paymentFacade.findFamousProductsInThreeDays()
+                                              .stream()
+                                              .map(ProductInfo::toResponse)
+                                              .toList());
     }
 }
