@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.global.aop;
+package kr.hhplus.be.server.global.lock;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DistributedLock {
+    boolean openTx() default false;
     String key();
     TimeUnit timeUnit() default TimeUnit.SECONDS;
     long waitTime() default 5L;

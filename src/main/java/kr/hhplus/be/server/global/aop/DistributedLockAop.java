@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.global.aop;
 
+import kr.hhplus.be.server.global.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -8,9 +9,11 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.lang.reflect.Method;
 
@@ -24,8 +27,9 @@ public class DistributedLockAop {
 
     private final RedissonClient redissonClient;
     private final AopTransaction transaction;
+    private final ApplicationEventPublisher eventPublisher;
 
-    @Around("@annotation(kr.hhplus.be.server.global.aop.DistributedLock)")
+    @Around("@annotation(kr.hhplus.be.server.global.lock.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -40,12 +44,18 @@ public class DistributedLockAop {
                 return false;
             }
 
-            return transaction.proceed(joinPoint);
+            return annotation.openTx()
+                 ? transaction.proceed(joinPoint)
+                 : joinPoint.proceed();
         } catch(InterruptedException e) {
             throw new InterruptedException();
         } finally {
             try {
-                rLock.unlock();
+                if(TransactionSynchronizationManager.isActualTransactionActive()) {
+                    eventPublisher.publishEvent(rLock);
+                } else {
+                    rLock.unlock();
+                }
             } catch(IllegalMonitorStateException e) {
                 log.info("Redisson Lock Already UnLock {} {}", method.getName(), key);
             }
