@@ -3,7 +3,6 @@ package kr.hhplus.be.server.application.payment.facade;
 import kr.hhplus.be.server.application.payment.external.PaymentSystem;
 import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
 import kr.hhplus.be.server.domain.coupon.service.CouponService;
-import kr.hhplus.be.server.domain.member.command.CartDeleteCommand;
 import kr.hhplus.be.server.domain.member.command.PointUseCommand;
 import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import kr.hhplus.be.server.domain.member.service.MemberService;
@@ -17,8 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import static kr.hhplus.be.server.infra.member.entity.PointHistory.PointUseType.USE;
@@ -56,8 +53,6 @@ public class PaymentFacade {
 
         // 결제가 정상 -> 포인트 차감
         if(isPaymentOk) {
-            List<CartDeleteCommand> deleteProductList = new ArrayList<>();
-
             memberService.useMemberPoint(PointUseCommand.builder()
                                                         .memberId(memberId)
                                                         .usePoint(orderInfo.getFinalPrice())
@@ -73,12 +68,7 @@ public class PaymentFacade {
                                             .getId();
 
                 productService.reduceProductStock(productId, quantity);
-                deleteProductList.add(CartDeleteCommand.builder()
-                                                       .cartProductId(productId)
-                                                       .build());
             }
-
-            memberService.deleteCartByProductId(deleteProductList);
         }
 
         PaymentInfo paymentInfo = paymentService.savePaymentResult(isPaymentOk, orderInfo);
