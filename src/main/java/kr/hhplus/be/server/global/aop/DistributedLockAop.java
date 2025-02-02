@@ -44,9 +44,7 @@ public class DistributedLockAop {
                 return false;
             }
 
-            return annotation.openTx()
-                 ? transaction.proceed(joinPoint)
-                 : joinPoint.proceed();
+            return joinPoint.proceed();
         } catch(InterruptedException e) {
             throw new InterruptedException();
         } finally {

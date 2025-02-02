@@ -7,6 +7,7 @@ import kr.hhplus.be.server.domain.member.service.MemberService;
 import kr.hhplus.be.server.global.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -15,6 +16,7 @@ public class CouponFacade {
     private final MemberService memberService;
     private final CouponService couponService;
 
+    @Transactional
     @DistributedLock(key = "#couponId", openTx = true)
     public CouponHistoryInfo applyCouponById(final Long couponId, final Long memberId) {
         MemberInfo memberInfo = memberService.findMemberById(memberId);
