@@ -27,6 +27,14 @@ public class CouponRepositoryImpl implements CouponRepository {
     private final CouponHistoryJpaRepository couponHistoryJpaRepository;
 
     @Override
+    public List<CouponInfo> findAll() {
+        return couponJpaRepository.findAll()
+                                  .stream()
+                                  .map(Coupon::toInfo)
+                                  .toList();
+    }
+
+    @Override
     public CouponInfo findCouponById(final Long couponId) {
         return couponJpaRepository.findById(couponId)
                                   .orElseThrow(() -> new CouponException(NOT_EXIST_COUPON))
@@ -62,15 +70,7 @@ public class CouponRepositoryImpl implements CouponRepository {
 
     @Override
     public CouponHistoryInfo applyPublishedCoupon(final CouponInfo couponInfo, final Long memberId) {
-        Coupon coupon = Coupon.builder()
-                              .id(couponInfo.getId())
-                              .publishedQuantity(couponInfo.getPublishedQuantity())
-                              .totalQuantity(couponInfo.getTotalQuantity())
-                              .rate(couponInfo.getRate())
-                              .expiredAt(couponInfo.getExpiredAt())
-                              .code(couponInfo.getCode())
-                              .rate(couponInfo.getRate())
-                              .build();
+        Coupon coupon = Coupon.of(couponInfo);
         CouponHistory couponHistory = CouponHistory.builder()
                                                    .id(new CouponHistoryId(couponInfo.getId(), memberId))
                                                    .coupon(coupon)

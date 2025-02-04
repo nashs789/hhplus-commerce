@@ -1,28 +1,24 @@
 package kr.hhplus.be.server.domain.coupon.service;
 
-import kr.hhplus.be.server.domain.coupon.exception.CouponException;
 import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
 import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static kr.hhplus.be.server.domain.coupon.exception.CouponException.CouponExceptionCode.PUBLISH_DUPLICATED_COUPON;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CouponService {
 
+    private final CouponCacheService couponCacheService;
+    private final CouponApplyCacheService couponApplyCacheService;
     private final CouponRepository couponRepository;
-
-    @Transactional(readOnly = true)
-    public CouponInfo findCouponById(final Long couponId) {
-        return couponRepository.findCouponById(couponId);
-    }
 
     @Transactional
     public CouponHistoryInfo findCouponHistoryByIdWithLock(final Long couponId, final Long memberId) {
@@ -40,15 +36,18 @@ public class CouponService {
     }
 
     @Transactional
-    public CouponHistoryInfo applyPublishedCoupon(final Long couponId, final MemberInfo memberInfo) {
-        CouponInfo couponInfo = couponRepository.findCouponById(couponId);
+    public boolean applyPublishedCoupon(final Long couponId, final MemberInfo memberInfo) {
+        if(couponCacheService.isAppliable(couponId)) {
+            couponApplyCacheService.applyCoupon(couponId, memberInfo.getId());
 
-        couponInfo.checkAvailability();
-
-        if(couponRepository.isDuplicated(couponInfo.getId(), memberInfo.getId())) {
-            throw new CouponException(PUBLISH_DUPLICATED_COUPON);
+            return true;
         }
 
-        return couponRepository.applyPublishedCoupon(couponInfo, memberInfo.getId());
+        CouponInfo couponInfo = couponRepository.findCouponById(couponId);
+
+        couponCacheService.addCouponCache(couponId, couponInfo.getRestCouponCount());
+        couponApplyCacheService.applyCoupon(couponId, memberInfo.getId());
+
+        return couponInfo.checkAvailability();
     }
 }

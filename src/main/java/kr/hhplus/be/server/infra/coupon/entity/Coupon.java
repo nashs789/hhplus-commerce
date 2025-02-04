@@ -36,6 +36,17 @@ public class Coupon extends Timestamp {
     @Column
     LocalDateTime expiredAt;
 
+    public static Coupon of(final CouponInfo couponInfo) {
+        return Coupon.builder()
+                     .id(couponInfo.getId())
+                     .code(couponInfo.getCode())
+                     .rate(couponInfo.getRate())
+                     .totalQuantity(couponInfo.getTotalQuantity())
+                     .publishedQuantity(couponInfo.getPublishedQuantity())
+                     .expiredAt(couponInfo.getExpiredAt())
+                     .build();
+    }
+
     public CouponInfo toInfo() {
         return CouponInfo.builder()
                          .id(id)
