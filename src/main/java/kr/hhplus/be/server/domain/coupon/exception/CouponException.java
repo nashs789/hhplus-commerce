@@ -18,7 +18,8 @@ public class CouponException extends CommerceException {
         PUBLISH_DUPLICATED_COUPON(BAD_REQUEST, "쿠폰 중복 발급 신청 입니다."),
         EXPIRED_COUPON(BAD_REQUEST, "만료된 쿠폰 입니다."),
         USED_COUPON(BAD_REQUEST, "이미 사용된 쿠폰 입니다."),
-        EXIST_COUPON_WAITING_QUEUE(BAD_REQUEST, "쿠폰 발급 대기중 입니다.")
+        EXIST_COUPON_WAITING_QUEUE(BAD_REQUEST, "쿠폰 발급 대기중 입니다."),
+        NOT_SUFFICIENT_QUANTITY(BAD_REQUEST, "남은 쿠폰이 존재하지 않습니다."),
         ;
 
         private final HttpStatus status;

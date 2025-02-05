@@ -2,6 +2,8 @@ package kr.hhplus.be.server.application.payment.facade;
 
 import kr.hhplus.be.server.application.payment.external.PaymentSystem;
 import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
+import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
+import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.domain.coupon.service.CouponService;
 import kr.hhplus.be.server.domain.member.command.PointUseCommand;
 import kr.hhplus.be.server.domain.member.info.MemberInfo;
@@ -32,6 +34,7 @@ public class PaymentFacade {
     private final PaymentSystem paymentSystem;
     private final CouponService couponService;
     private final ProductService productService;
+    private final CouponRepository couponRepository;
 
     @Transactional
     public PaymentInfo paymentProgress(final Long memberId, final Long orderId, final Long couponId) {
@@ -40,11 +43,12 @@ public class PaymentFacade {
 
         // 쿠폰을 선택 했다면 쿠폰 가격 적용
         if(!Objects.isNull(couponId)) {
+            CouponInfo couponInfo = couponRepository.findCouponById(couponId);
             CouponHistoryInfo couponHistoryInfo = couponService.findCouponHistoryByIdWithLock(couponId, memberId);
 
             couponHistoryInfo.useCoupon();
             couponService.changeCouponHistoryStatus(couponHistoryInfo, memberId);
-            orderInfo.applyCoupon(couponHistoryInfo.getCouponInfo());
+            orderInfo.applyCoupon(couponInfo);
         }
 
         // 잔고 확인

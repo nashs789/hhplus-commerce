@@ -63,6 +63,15 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
+    public List<CouponHistoryInfo> findCouponHistoryCouponId(final Long couponId) {
+        return couponHistoryJpaRepository.findCouponHistoryCouponId(couponId)
+                                         .orElseThrow(() -> new CouponException(NOT_EXIST_COUPON_HISTORY))
+                                         .stream()
+                                         .map(CouponHistory::toInfo)
+                                         .toList();
+    }
+
+    @Override
     public boolean isDuplicated(Long couponId, Long memberId) {
         return couponHistoryJpaRepository.isDuplicated(couponId, memberId)
                                          .isPresent();

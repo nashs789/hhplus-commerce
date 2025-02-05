@@ -1,20 +1,22 @@
-package kr.hhplus.be.server.domain.coupon.service;
+package kr.hhplus.be.server.domain.coupon.cache;
 
 import jakarta.annotation.PostConstruct;
 import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
 
-@Service
-@RequiredArgsConstructor
-public class CouponCacheService {
+import static kr.hhplus.be.server.domain.coupon.cache.CouponApplyCache.APPLICANT_KEY_PREFIX;
 
-    private static final String COUPON_KEY_PREFIX = "COUPON-INFO-";
+@Component
+@RequiredArgsConstructor
+public class CouponCache {
+
+    public static final String COUPON_KEY_PREFIX = "COUPON-INFO-";
 
     private final StringRedisTemplate redisTemplate;
     private final CouponRepository couponRepository;
@@ -57,5 +59,16 @@ public class CouponCacheService {
 
     public boolean isAppliable(final Long couponId) {
         return isCouponExist(couponId) && getCouponCount(couponId) > 0;
+    }
+
+    public List<Long> getCouponIds() {
+        return Objects.requireNonNull(
+                          redisTemplate.keys(APPLICANT_KEY_PREFIX + "*")
+                      )
+                      .stream()
+                      .map(key -> key.replace(APPLICANT_KEY_PREFIX, ""))
+                      .mapToLong(Long::parseLong)
+                      .boxed()
+                      .toList();
     }
 }

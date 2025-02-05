@@ -13,6 +13,7 @@ public interface CouponRepository {
     CouponHistoryInfo findCouponHistoryByIdWithLock(Long couponId, Long memberId);
     void changeCouponHistoryStatus(CouponHistoryInfo couponHistoryInfo, Long memberId);
     List<CouponHistoryInfo> findCouponHistoryMemberById(Long memberId);
+    List<CouponHistoryInfo> findCouponHistoryCouponId(Long couponId);
     boolean isDuplicated(Long couponId, Long memberId);
     CouponHistoryInfo applyPublishedCoupon(Long couponId, Long memberId);
 }
