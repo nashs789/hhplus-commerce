@@ -14,5 +14,5 @@ public interface CouponRepository {
     void changeCouponHistoryStatus(CouponHistoryInfo couponHistoryInfo, Long memberId);
     List<CouponHistoryInfo> findCouponHistoryMemberById(Long memberId);
     boolean isDuplicated(Long couponId, Long memberId);
-    CouponHistoryInfo applyPublishedCoupon(CouponInfo couponInfo, Long memberId);
+    CouponHistoryInfo applyPublishedCoupon(Long couponId, Long memberId);
 }

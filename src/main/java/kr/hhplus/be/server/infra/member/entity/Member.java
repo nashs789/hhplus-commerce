@@ -22,6 +22,13 @@ public class Member extends Timestamp {
     @Column
     private Long point;
 
+    public static Member from(final MemberInfo info) {
+        return Member.builder()
+                     .id(info.getId())
+                     .point(info.getPoint())
+                     .build();
+    }
+
     public MemberInfo toInfo() {
         return MemberInfo.builder()
                          .id(id)

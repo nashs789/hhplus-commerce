@@ -69,18 +69,8 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
-    public CouponHistoryInfo applyPublishedCoupon(final CouponInfo couponInfo, final Long memberId) {
-        Coupon coupon = Coupon.from(couponInfo);
-        CouponHistory couponHistory = CouponHistory.builder()
-                                                   .id(new CouponHistoryId(couponInfo.getId(), memberId))
-                                                   .coupon(coupon)
-                                                   .member(Member.builder()
-                                                                 .id(memberId)
-                                                                 .build())
-                                                   .status(NOT_USED)
-                                                   .build();
-
-        couponJpaRepository.save(coupon);
+    public CouponHistoryInfo applyPublishedCoupon(final Long couponId, final Long memberId) {
+        CouponHistory couponHistory = CouponHistory.create(couponId, memberId);
 
         return couponHistoryJpaRepository.save(couponHistory)
                                          .toInfo();
