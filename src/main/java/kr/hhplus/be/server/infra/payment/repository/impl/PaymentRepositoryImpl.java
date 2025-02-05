@@ -26,7 +26,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
 
     @Override
     public PaymentInfo savePaymentResult(final boolean result, final OrderInfo orderInfo) {
-        Payment payment = Payment.of(orderInfo, result);
+        Payment payment = Payment.from(orderInfo, result);
 
         return paymentJpaRepository.save(payment)
                                    .toInfo();

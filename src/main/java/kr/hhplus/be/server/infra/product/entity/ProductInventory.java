@@ -27,11 +27,11 @@ public class ProductInventory extends Timestamp {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public static ProductInventory of(ProductInventoryInfo info) {
+    public static ProductInventory from(ProductInventoryInfo info) {
         return ProductInventory.builder()
                                .id(info.getId())
                                .stock(info.getStock())
-                               .product(Product.of(
+                               .product(Product.from(
                                        info.getProductInfo()
                                ))
                                .build();

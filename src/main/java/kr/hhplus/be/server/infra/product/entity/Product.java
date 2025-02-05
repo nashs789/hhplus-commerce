@@ -28,7 +28,7 @@ public class Product extends Timestamp {
     @Column
     private String image;
 
-    public static Product of(ProductInfo info) {
+    public static Product from(ProductInfo info) {
         return Product.builder()
                       .id(info.getId())
                       .name(info.getName())

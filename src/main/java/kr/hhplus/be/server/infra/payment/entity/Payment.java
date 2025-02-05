@@ -56,10 +56,10 @@ public class Payment extends Timestamp {
     @Column
     private Long amount;
 
-    public static Payment of(final OrderInfo orderInfo, final boolean result) {
+    public static Payment from(final OrderInfo orderInfo, final boolean result) {
         return Payment.builder()
                       // .coupon() TODO - 이거 생각 못했네...
-                      .order(Order.of(orderInfo))
+                      .order(Order.from(orderInfo))
                       .paymentStatus(result ? SUCCESS : FAIL)
                       .paymentMethod(CASH)
                       .amount(orderInfo.getFinalPrice())

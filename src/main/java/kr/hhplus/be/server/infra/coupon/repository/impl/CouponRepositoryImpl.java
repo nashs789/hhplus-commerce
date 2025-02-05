@@ -70,7 +70,7 @@ public class CouponRepositoryImpl implements CouponRepository {
 
     @Override
     public CouponHistoryInfo applyPublishedCoupon(final CouponInfo couponInfo, final Long memberId) {
-        Coupon coupon = Coupon.of(couponInfo);
+        Coupon coupon = Coupon.from(couponInfo);
         CouponHistory couponHistory = CouponHistory.builder()
                                                    .id(new CouponHistoryId(couponInfo.getId(), memberId))
                                                    .coupon(coupon)
