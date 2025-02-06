@@ -43,10 +43,6 @@ public class CouponCache {
         redisTemplate.opsForValue().set(COUPON_KEY_PREFIX + couponId, String.valueOf(couponCount));
     }
 
-    public long increaseCouponCount(final Long couponId) {
-        return redisTemplate.opsForValue().increment(COUPON_KEY_PREFIX + couponId);
-    }
-
     public long decreaseCouponCount(final Long couponId) {
         return redisTemplate.opsForValue().decrement(COUPON_KEY_PREFIX + couponId);
     }
@@ -61,7 +57,11 @@ public class CouponCache {
         return isCouponExist(couponId) && getCouponCount(couponId) > 0;
     }
 
-    public List<Long> getCouponIds() {
+    /**
+     * 쿠폰 발급을 신청한 지원자 대기열이 존재하는 쿠폰 ID 조회
+     * @return 쿠폰 ID 리스트
+     */
+    public List<Long> getAppliedCouponIds() {
         return Objects.requireNonNull(
                           redisTemplate.keys(APPLICANT_KEY_PREFIX + "*")
                       )

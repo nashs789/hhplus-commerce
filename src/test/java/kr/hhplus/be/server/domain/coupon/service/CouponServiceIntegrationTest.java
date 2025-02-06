@@ -85,4 +85,10 @@ class CouponServiceIntegrationTest {
         assertEquals(BAD_REQUEST, couponException.getStatus());
         assertEquals("쿠폰 중복 발급 신청 입니다.", couponException.getMessage());
     }
+
+    @Test
+    @DisplayName("쿠폰 발급 완료")
+    void test() {
+
+    }
 }

@@ -19,7 +19,7 @@ public class CouponScheduler {
 
     @Scheduled(fixedDelay = 10_000)
     public void getApplicantAndPublishCoupon() {
-        List<Long> couponIds = couponCache.getCouponIds();
+        List<Long> couponIds = couponCache.getAppliedCouponIds();
 
         for(Long couponId : couponIds) {
             couponService.publishCoupon(couponId);

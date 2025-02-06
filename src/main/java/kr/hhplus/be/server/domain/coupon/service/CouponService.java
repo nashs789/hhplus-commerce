@@ -9,7 +9,6 @@ import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
 import kr.hhplus.be.server.domain.coupon.info.CouponPublishEvent;
 import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.domain.member.info.MemberInfo;
-import kr.hhplus.be.server.infra.coupon.entity.CouponHistory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -71,7 +70,7 @@ public class CouponService {
         return couponInfo.checkAvailability();
     }
 
-    // TODO - 장애 났을 때 데이터 정합성 지못미... 일단 구현 먼저
+    // TODO - 장애 났을 때 데이터 정합성 지못미... 일단 구현 먼저 (테스트 코드 작성 해야함)
     @Async
     @Transactional
     public void publishCoupon(final Long couponId) throws CouponException {

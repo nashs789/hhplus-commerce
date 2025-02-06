@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import static kr.hhplus.be.server.domain.coupon.exception.CouponException.CouponExceptionCode.PUBLISH_DUPLICATED_COUPON;
