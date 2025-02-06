@@ -25,7 +25,7 @@ class CouponInfoTest {
                                           .build();
 
         // when & then
-        assertDoesNotThrow(couponInfo::checkAvailability);
+        assertEquals(true, couponInfo.checkAvailability());
     }
 
     @DisplayName("쿠폰 발급 수량에 따른 신청 실패 유효성 테스트")
@@ -40,11 +40,7 @@ class CouponInfoTest {
                                           .expiredAt(LocalDateTime.now().plusDays(1))
                                           .build();
 
-        // when
-        CouponException couponException = assertThrows(CouponException.class, couponInfo::checkAvailability);
-
-        // then
-        assertEquals(BAD_REQUEST, couponException.getStatus());
-        assertEquals("유효하지 않은 쿠폰 입니다.", couponException.getMessage());
+        // when && then
+        assertEquals(false, couponInfo.checkAvailability());
     }
 }

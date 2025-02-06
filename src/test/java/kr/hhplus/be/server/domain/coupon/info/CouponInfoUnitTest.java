@@ -26,7 +26,7 @@ class CouponInfoUnitTest {
                                           .build();
 
         // when && then
-        assertDoesNotThrow(couponInfo::checkAvailability);
+        assertEquals(true, couponInfo.checkAvailability());
     }
 
     @Test
@@ -43,12 +43,8 @@ class CouponInfoUnitTest {
                                           .expiredAt(yesterday)
                                           .build();
 
-        // when
-        CouponException couponException = assertThrows(CouponException.class, couponInfo::checkAvailability);
-
-        // then
-        assertEquals(HttpStatus.BAD_REQUEST, couponException.getStatus());
-        assertEquals("유효하지 않은 쿠폰 입니다.", couponException.getMessage());
+        // when && then
+        assertEquals(false, couponInfo.checkAvailability());
     }
 
     @Test
@@ -65,11 +61,7 @@ class CouponInfoUnitTest {
                                           .expiredAt(tomorrow)
                                           .build();
 
-        // when
-        CouponException couponException = assertThrows(CouponException.class, couponInfo::checkAvailability);
-
-        // then
-        assertEquals(HttpStatus.BAD_REQUEST, couponException.getStatus());
-        assertEquals("유효하지 않은 쿠폰 입니다.", couponException.getMessage());
+        // when && then
+        assertEquals(false, couponInfo.checkAvailability());
     }
 }
