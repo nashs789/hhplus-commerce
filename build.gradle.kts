@@ -38,6 +38,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-aop")
 	// Redis
 	implementation ("org.redisson:redisson-spring-boot-starter:3.27.0")
+	// Cache
+	implementation("org.springframework.boot:spring-boot-starter-cache")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	// DB
 	runtimeOnly("com.mysql:mysql-connector-j")
     // Test

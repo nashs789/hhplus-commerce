@@ -40,7 +40,7 @@ public class OrderDetail extends Timestamp {
     public static OrderDetail of(final OrderDetailInfo orderDetailInfo) {
         return OrderDetail.builder()
                           .id(orderDetailInfo.getId())
-                          .product(Product.of(orderDetailInfo.getProductInfo()))
+                          .product(Product.from(orderDetailInfo.getProductInfo()))
                           .build();
     }
 

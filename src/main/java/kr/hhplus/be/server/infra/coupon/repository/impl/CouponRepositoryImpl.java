@@ -27,6 +27,14 @@ public class CouponRepositoryImpl implements CouponRepository {
     private final CouponHistoryJpaRepository couponHistoryJpaRepository;
 
     @Override
+    public List<CouponInfo> findAll() {
+        return couponJpaRepository.findAll()
+                                  .stream()
+                                  .map(Coupon::toInfo)
+                                  .toList();
+    }
+
+    @Override
     public CouponInfo findCouponById(final Long couponId) {
         return couponJpaRepository.findById(couponId)
                                   .orElseThrow(() -> new CouponException(NOT_EXIST_COUPON))
@@ -55,32 +63,23 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
+    public List<CouponHistoryInfo> findCouponHistoryCouponId(final Long couponId) {
+        return couponHistoryJpaRepository.findCouponHistoryCouponId(couponId)
+                                         .orElseThrow(() -> new CouponException(NOT_EXIST_COUPON_HISTORY))
+                                         .stream()
+                                         .map(CouponHistory::toInfo)
+                                         .toList();
+    }
+
+    @Override
     public boolean isDuplicated(Long couponId, Long memberId) {
         return couponHistoryJpaRepository.isDuplicated(couponId, memberId)
                                          .isPresent();
     }
 
     @Override
-    public CouponHistoryInfo applyPublishedCoupon(final CouponInfo couponInfo, final Long memberId) {
-        Coupon coupon = Coupon.builder()
-                              .id(couponInfo.getId())
-                              .publishedQuantity(couponInfo.getPublishedQuantity())
-                              .totalQuantity(couponInfo.getTotalQuantity())
-                              .rate(couponInfo.getRate())
-                              .expiredAt(couponInfo.getExpiredAt())
-                              .code(couponInfo.getCode())
-                              .rate(couponInfo.getRate())
-                              .build();
-        CouponHistory couponHistory = CouponHistory.builder()
-                                                   .id(new CouponHistoryId(couponInfo.getId(), memberId))
-                                                   .coupon(coupon)
-                                                   .member(Member.builder()
-                                                                 .id(memberId)
-                                                                 .build())
-                                                   .status(NOT_USED)
-                                                   .build();
-
-        couponJpaRepository.save(coupon);
+    public CouponHistoryInfo applyPublishedCoupon(final Long couponId, final Long memberId) {
+        CouponHistory couponHistory = CouponHistory.create(couponId, memberId);
 
         return couponHistoryJpaRepository.save(couponHistory)
                                          .toInfo();

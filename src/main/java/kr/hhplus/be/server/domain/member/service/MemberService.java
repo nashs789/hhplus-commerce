@@ -4,6 +4,7 @@ import kr.hhplus.be.server.domain.member.command.CartAddCommand;
 import kr.hhplus.be.server.domain.member.command.CartDeleteCommand;
 import kr.hhplus.be.server.domain.member.command.PointChargeCommand;
 import kr.hhplus.be.server.domain.member.command.PointUseCommand;
+import kr.hhplus.be.server.domain.member.exception.CartException;
 import kr.hhplus.be.server.domain.member.exception.PointException;
 import kr.hhplus.be.server.domain.member.info.CartInfo;
 import kr.hhplus.be.server.domain.member.info.CartProductInfo;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static kr.hhplus.be.server.domain.member.exception.CartException.CartExceptionCode.EMPTY_CART;
 import static kr.hhplus.be.server.domain.member.exception.PointException.PointExceptionCode.FAIL_CHARGE;
 import static kr.hhplus.be.server.domain.member.exception.PointException.PointExceptionCode.FAIL_USE;
 
@@ -73,7 +75,13 @@ public class MemberService {
     }
     @Transactional
     public List<CartProductInfo> findCartProductsByMemberIdWithLock(final Long memberId) {
-        return memberRepository.findCartProductsByMemberIdWithLock(memberId);
+        List<CartProductInfo> productsInCart = memberRepository.findCartProductsByMemberIdWithLock(memberId);
+
+        if(productsInCart.isEmpty()) {
+            throw new CartException(EMPTY_CART);
+        }
+
+        return productsInCart;
     }
 
     @Transactional

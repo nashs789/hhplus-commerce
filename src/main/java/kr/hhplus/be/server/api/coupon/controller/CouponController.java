@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.api.coupon.controller;
 
 import kr.hhplus.be.server.api.coupon.response.CouponHistoryResponse;
-import kr.hhplus.be.server.api.coupon.response.CouponResponse;
 import kr.hhplus.be.server.application.coupon.CouponFacade;
 import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
 import kr.hhplus.be.server.domain.coupon.service.CouponService;
@@ -20,15 +19,6 @@ public class CouponController implements CouponApi{
     private final CouponFacade couponFacade;
 
     @Override
-    public ResponseEntity<CouponResponse> findCouponById(
-            @PathVariable("couponId") final Long couponId
-    ) {
-        return ResponseEntity.ok(couponService.findCouponById(couponId)
-                                              .toResponse()
-        );
-    }
-
-    @Override
     public ResponseEntity<List<CouponHistoryResponse>> findCouponHistoryById(
             @PathVariable("memberId") final Long memberId
     ) {
@@ -39,11 +29,10 @@ public class CouponController implements CouponApi{
     }
 
     @Override
-    public ResponseEntity<CouponHistoryResponse> applyCouponById(
+    public ResponseEntity<Boolean> applyCouponById(
             @PathVariable("couponId") final Long couponId,
             @PathVariable("memberId") final Long memberId
     ) {
-        return ResponseEntity.ok(couponFacade.applyCouponById(couponId, memberId)
-                                             .toResponse());
+        return ResponseEntity.ok(couponFacade.applyCouponById(couponId, memberId));
     }
 }

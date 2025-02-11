@@ -58,7 +58,7 @@ public class Order extends Timestamp {
         orderDetail.setOrder(this);
     }
 
-    public static Order of(final OrderInfo orderInfo) {
+    public static Order from(final OrderInfo orderInfo) {
         return Order.builder()
                     .id(orderInfo.getId())
                     .originalPrice(orderInfo.getOriginalPrice())

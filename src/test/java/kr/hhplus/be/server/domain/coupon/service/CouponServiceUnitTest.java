@@ -1,5 +1,8 @@
 package kr.hhplus.be.server.domain.coupon.service;
 
+import kr.hhplus.be.server.domain.coupon.cache.CouponApplyCache;
+import kr.hhplus.be.server.domain.coupon.cache.CouponCache;
+import kr.hhplus.be.server.domain.coupon.cache.CouponHistoryCache;
 import kr.hhplus.be.server.domain.coupon.exception.CouponException;
 import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
 import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
@@ -18,12 +21,12 @@ import java.util.List;
 
 import static kr.hhplus.be.server.domain.coupon.exception.CouponException.CouponExceptionCode.NOT_EXIST_COUPON;
 import static kr.hhplus.be.server.domain.coupon.exception.CouponException.CouponExceptionCode.NOT_EXIST_COUPON_HISTORY;
-import static kr.hhplus.be.server.infra.coupon.entity.CouponHistory.CouponStatus.NOT_USED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +34,15 @@ class CouponServiceUnitTest {
 
     @Mock
     private CouponRepository couponRepository;
+
+    @Mock
+    private CouponHistoryCache couponHistoryCache;
+
+    @Mock
+    private CouponCache couponCache;
+
+    @Mock
+    private CouponApplyCache couponApplyCache;
 
     @InjectMocks
     private CouponService couponService;
@@ -45,7 +57,7 @@ class CouponServiceUnitTest {
         when(couponRepository.findCouponById(anyLong())).thenReturn(couponInfo);
 
         // when
-        CouponInfo result = couponService.findCouponById(1L);
+        CouponInfo result = couponService.findByCouponId(1L);
 
         // then
         assertEquals(couponInfo, result);
@@ -60,7 +72,7 @@ class CouponServiceUnitTest {
 
         // when
         CouponException couponException = assertThrows(CouponException.class, () ->
-                couponService.findCouponById(1L)
+                couponService.findByCouponId(1L)
         );
 
         // then
@@ -104,7 +116,7 @@ class CouponServiceUnitTest {
     }
 
     @Test
-    @DisplayName("쿠폰 발급")
+    @DisplayName("쿠폰 신청 (쿠폰 캐싱 상태)")
     void applyPublishedCoupon() {
         // given
         CouponInfo couponInfo = CouponInfo.builder()
@@ -113,16 +125,18 @@ class CouponServiceUnitTest {
                                           .totalQuantity(10)
                                           .expiredAt(LocalDateTime.now().plusDays(1))
                                           .build();
-        MemberInfo memberInfo = MemberInfo.builder().build();
-        CouponHistoryInfo couponHistoryInfo = CouponHistoryInfo.builder()
-                                                               .status(NOT_USED)
-                                                               .build();
-        when(couponRepository.applyPublishedCoupon(couponInfo, memberInfo.getId())).thenReturn(couponHistoryInfo);
-        when(couponRepository.findCouponById(anyLong())).thenReturn(couponInfo);
+        MemberInfo memberInfo = MemberInfo.builder()
+                                          .id(1L)
+                                          .build();
+
+        doNothing().when(couponHistoryCache).checkAppliedHistory(anyLong(), anyLong());
+        when(couponCache.isAppliable(anyLong())).thenReturn(true);
+        doNothing().when(couponApplyCache).applyCoupon(anyLong(), anyLong());
+
         // when
-        CouponHistoryInfo result = couponService.applyPublishedCoupon(couponInfo.getId(), memberInfo);
+        boolean result = couponService.applyPublishedCoupon(couponInfo.getId(), memberInfo);
 
         // then
-        assertEquals(couponHistoryInfo, result);
+        assertEquals(true, result);
     }
 }

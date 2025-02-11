@@ -20,8 +20,8 @@ public interface CouponHistoryJpaRepository extends JpaRepository<CouponHistory,
         SELECT ch
           FROM Coupon c
           JOIN CouponHistory ch
-            ON c.id = ch.coupon.id
-         WHERE ch.member.id = :memberId
+            ON c.id = ch.id.couponId
+         WHERE ch.id.memberId = :memberId
            AND c.id = :couponId
     """)
     Optional<CouponHistory> findCouponHistoryByIdWithLock(
@@ -33,8 +33,8 @@ public interface CouponHistoryJpaRepository extends JpaRepository<CouponHistory,
     @Query("""
         UPDATE CouponHistory ch
            SET ch.status = :couponStatus
-         WHERE ch.member.id = :memberId
-           AND ch.coupon.id = :couponId
+         WHERE ch.id.memberId = :memberId
+           AND ch.id.couponId = :couponId
     """)
     void changeCouponHistoryStatus(
             @Param("couponId") final Long couponId,
@@ -44,20 +44,25 @@ public interface CouponHistoryJpaRepository extends JpaRepository<CouponHistory,
 
     @Query("""
         SELECT ch
-          FROM Coupon c
-          JOIN CouponHistory ch
-            ON c.id = ch.coupon.id
-         WHERE ch.member.id = :memberId
+          FROM CouponHistory ch
+         WHERE ch.id.memberId = :memberId
     """)
     Optional<List<CouponHistory>> findCouponHistoryMemberById(@Param("memberId") final Long memberId);
 
     @Query("""
         SELECT ch
+          FROM CouponHistory ch
+         WHERE ch.id.couponId = :couponId
+    """)
+    Optional<List<CouponHistory>> findCouponHistoryCouponId(@Param("couponId") final Long couponId);
+
+    @Query("""
+        SELECT ch
           FROM Coupon c
           JOIN CouponHistory ch
-            ON c.id = ch.coupon.id
+            ON c.id = ch.id.couponId
          WHERE c.id = :couponId
-           AND ch.member.id = :memberId
+           AND ch.id.memberId = :memberId
     """)
     Optional<CouponHistory> isDuplicated(@Param("couponId") final Long couponId, final Long memberId);
 }

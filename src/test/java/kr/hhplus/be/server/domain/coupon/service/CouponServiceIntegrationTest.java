@@ -5,6 +5,7 @@ import kr.hhplus.be.server.domain.coupon.info.CouponHistoryInfo;
 import kr.hhplus.be.server.domain.coupon.info.CouponInfo;
 import kr.hhplus.be.server.domain.member.info.MemberInfo;
 import kr.hhplus.be.server.domain.member.service.MemberService;
+import kr.hhplus.be.server.infra.coupon.entity.key.CouponHistoryId;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class CouponServiceIntegrationTest {
     @Transactional
     void findCouponById() {
         // given & when
-        CouponInfo result = couponService.findCouponById(COUPON_ID);
+        CouponInfo result = couponService.findByCouponId(COUPON_ID);
 
         // then
         assertEquals(COUPON_ID, result.getId());
@@ -66,8 +67,9 @@ class CouponServiceIntegrationTest {
         // then
         assertEquals(1, result.size());
         Assertions.assertThat(result.stream()
-                                    .map(CouponHistoryInfo::getMemberInfo)
-                                    .map(MemberInfo::getId))
+                                    .map(CouponHistoryInfo::getId)
+                                    .map(CouponHistoryId::getMemberId)
+                                    .toList())
                   .containsExactly(MEMBER_ID);
     }
 
@@ -82,5 +84,11 @@ class CouponServiceIntegrationTest {
         // then
         assertEquals(BAD_REQUEST, couponException.getStatus());
         assertEquals("쿠폰 중복 발급 신청 입니다.", couponException.getMessage());
+    }
+
+    @Test
+    @DisplayName("쿠폰 발급 완료")
+    void test() {
+
     }
 }

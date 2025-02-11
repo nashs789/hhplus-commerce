@@ -20,23 +20,6 @@ import java.util.List;
 public interface CouponApi {
 
     @Operation(
-            summary = "쿠폰 정보 조회",
-            description = "쿠폰에 대한 정보를 조회 합니다.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "쿠폰 상세 정보 조회 성공",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CouponResponse.class)
-                            )
-                    )
-            }
-    )
-    @GetMapping("/{couponId}")
-    ResponseEntity<CouponResponse> findCouponById(@PathVariable("memberId") Long memberId);
-
-    @Operation(
             summary = "보유 쿠폰 조회",
             description = "보유한 쿠폰을 조회 합니다.",
             responses = {
@@ -68,7 +51,7 @@ public interface CouponApi {
             }
     )
     @PostMapping("/{couponId}/member/{memberId}")
-    ResponseEntity<CouponHistoryResponse> applyCouponById(
+    ResponseEntity<Boolean> applyCouponById(
             @PathVariable("couponId") Long couponId,
             @PathVariable("memberId") Long memberId
     );
